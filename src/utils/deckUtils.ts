@@ -142,24 +142,33 @@ const ambushCards: CardData[] = [
   },
 ];
 
-export function createSeasonDeck(usedAmbushIds: string[]): {
+export function createSeasonDeck(
+  usedAmbushIds: string[],
+  previousUndrawnAmbushes: CardData[],
+): {
   deck: CardData[];
   newUsedAmbushId: string;
+  newPreviousUndrawnAmbushes: CardData[];
 } {
   const availableAmbushes = ambushCards.filter(
-    (card) => !usedAmbushIds.includes(card.id),
+    (card) =>
+      !usedAmbushIds.includes(card.id) &&
+      !previousUndrawnAmbushes.some((prev) => prev.id === card.id),
   );
 
   if (availableAmbushes.length === 0) {
     throw new Error("No ambush cards left to add!");
   }
 
-  const selectedAmbush = availableAmbushes[0]; // pick first available
+  const selectedAmbush = availableAmbushes[0]; // pick the next available
+  const newUndrawnAmbushes = [...previousUndrawnAmbushes, selectedAmbush];
+
   const deckWithoutAmbush = shuffle(exploreCards);
-  const deck = shuffle([...deckWithoutAmbush, selectedAmbush]);
+  const deck = shuffle([...deckWithoutAmbush, ...newUndrawnAmbushes]);
 
   return {
     deck,
     newUsedAmbushId: selectedAmbush.id,
+    newPreviousUndrawnAmbushes: newUndrawnAmbushes,
   };
 }

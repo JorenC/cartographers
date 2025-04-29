@@ -14,6 +14,9 @@ function GameScreen() {
   const [drawnCards, setDrawnCards] = useState<CardData[]>([]);
   const [deck, setDeck] = useState<CardData[]>([]);
   const [usedAmbushIds, setUsedAmbushIds] = useState<string[]>([]);
+  const [previousUndrawnAmbushes, setPreviousUndrawnAmbushes] = useState<
+    CardData[]
+  >([]);
 
   const [scoringCards, setScoringCards] = useState<Record<string, ScoringCard>>(
     {
@@ -38,13 +41,18 @@ function GameScreen() {
   }, []);
 
   const startNewSeason = () => {
-    const { deck: newDeck, newUsedAmbushId } = createSeasonDeck(usedAmbushIds);
+    const {
+      deck: newDeck,
+      newUsedAmbushId,
+      newPreviousUndrawnAmbushes,
+    } = createSeasonDeck(usedAmbushIds, previousUndrawnAmbushes);
 
     console.log("New deck for season:", seasons[seasonIndex]);
-    console.table(newDeck); // 👈 Very nice formatting in console
+    console.table(newDeck);
 
     setDeck(newDeck);
     setUsedAmbushIds([...usedAmbushIds, newUsedAmbushId]);
+    setPreviousUndrawnAmbushes(newPreviousUndrawnAmbushes);
     setDrawnCards([]);
     setUsedPoints(0);
   };
@@ -66,6 +74,13 @@ function GameScreen() {
     setDeck(deck.slice(1));
     setDrawnCards([...drawnCards, nextCard]);
     setUsedPoints(usedPoints + nextCard.value);
+
+    // If ambush drawn, remove it from previousUndrawnAmbushes
+    if (nextCard.type === "ambush") {
+      setPreviousUndrawnAmbushes((prev) =>
+        prev.filter((card) => card.id !== nextCard.id),
+      );
+    }
   };
 
   const handleNextSeason = () => {
