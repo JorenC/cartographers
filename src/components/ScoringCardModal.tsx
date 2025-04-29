@@ -7,7 +7,6 @@ interface ScoringCardModalProps {
 
 function ScoringCardModal({ card, onClose }: ScoringCardModalProps) {
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Close if clicking outside the modal content
     if (e.target === e.currentTarget) {
       onClose();
     }
@@ -24,7 +23,6 @@ function ScoringCardModal({ card, onClose }: ScoringCardModalProps) {
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
         >
-          {/* Inline SVG for X Icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
@@ -42,7 +40,7 @@ function ScoringCardModal({ card, onClose }: ScoringCardModalProps) {
         </button>
 
         {/* Left: Card Image */}
-        <div className="w-full md:w-auto flex justify-start items-start">
+        <div className="w-full md:w-auto flex justify-center items-start p-4">
           <img
             src={`/cards/scoring/${card.id}.png`}
             alt={card.description}
@@ -55,9 +53,13 @@ function ScoringCardModal({ card, onClose }: ScoringCardModalProps) {
         </div>
 
         {/* Right: Title + Description */}
-        <div className="flex-1 p-4 flex flex-col justify-start">
-          <h2 className="text-3xl font-bold mb-4">{card.name}</h2>
-          <p className="text-lg text-gray-700">{card.description}</p>
+        <div className="flex-1 flex flex-col justify-start p-6">
+          <h2 className="text-3xl font-bold text-black mb-6 mt-4">
+            {card.name}
+          </h2>
+          <p className="text-lg text-gray-700 leading-relaxed">
+            {card.description}
+          </p>
         </div>
       </div>
     </div>

@@ -8,4 +8,5 @@
 }
 body {
 	@apply font-metamorphous;
+	@apply bg-black text-white;
 }

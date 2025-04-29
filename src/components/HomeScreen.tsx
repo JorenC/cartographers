@@ -15,8 +15,8 @@ function HomeScreen({ onStart }: HomeScreenProps) {
       <div className="z-10 flex flex-col items-center gap-6 text-center">
         <h1 className="text-5xl font-bold drop-shadow-lg">Cartographers</h1>
         <p className="max-w-xl text-lg drop-shadow">
-          A web implementation of the flip-and-write game where you map the
-          wilderness and defend it from ambushes.
+          A web implementation of the award-winning flip-and-write game where
+          you map the wilderness and defend it from ambushes.
         </p>
 
         {/* Resource links */}
@@ -36,6 +36,14 @@ function HomeScreen({ onStart }: HomeScreenProps) {
             className="px-4 py-2 bg-white text-black font-semibold rounded hover:bg-gray-200 transition"
           >
             Printable Maps
+          </a>
+          <a
+            href="/printmap.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 bg-white text-black font-semibold rounded hover:bg-gray-200 transition"
+          >
+            Printer Friendly Map
           </a>
         </div>
 

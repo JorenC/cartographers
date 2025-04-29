@@ -67,7 +67,7 @@ function SeasonDisplay({
       {/* Right side: Scoring cards */}
       <div className="relative p-4 border-4 border-[rgba(191,54,12,0.3)] bg-brown-200/20 rounded-lg">
         {/* Scoring Label */}
-        <div className="absolute -top-4 left-4 bg-white text-brown-200 text-xs px-2 py-1 rounded-md font-bold uppercase tracking-wide">
+        <div className="absolute -top-4 left-4 bg-white text-black text-xs px-2 py-1 rounded-md font-bold uppercase tracking-wide">
           Scoring cards
         </div>
 

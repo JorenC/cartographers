@@ -75,7 +75,7 @@ export const deckC: ScoringCard[] = [
     id: "C3",
     name: "Greenbough",
     description:
-      "Earn 1 reputation for each row and column with at least one Forest. One Forest may score for both a row and a column.",
+      "Earn 1 reputation for each row and column containing at least one Forest. One Forest may score twice for both a row and a column.",
   },
   {
     id: "C4",
