@@ -6,10 +6,30 @@ export interface ScoringCard {
 
 // Dummy scoring cards for each set
 export const deckA: ScoringCard[] = [
-  { id: "A1", name: "Great City", description: "." },
-  { id: "A2", name: "Borderlands", description: "." },
-  { id: "A3", name: "Shieldgate", description: "." },
-  { id: "A4", name: "Greengold Plains", description: "." },
+  {
+    id: "A1",
+    name: "Great City",
+    description:
+      "Earn one reputation for each Village space in the largest cluster of Village spaces that is not adjacent to a Mountain space.",
+  },
+  {
+    id: "A2",
+    name: "Borderlands",
+    description:
+      "Earn six reputation for each complete row or complete column of filled spaces (Mountains and Wasteland spaces are counted as filled spaces and help to score this Scoring card).",
+  },
+  {
+    id: "A3",
+    name: "Shieldgate",
+    description:
+      "Earn two reputation for each Village space in the second largest cluster of Village spaces.",
+  },
+  {
+    id: "A4",
+    name: "Greengold Plains",
+    description:
+      "Earn 3 reputation for each cluster of Village spaces that are adjacent to three or more different Terrain types (Reputation is scored for the whole cluster and not for individual spaces in a cluster).",
+  },
 ];
 
 export const deckB: ScoringCard[] = [

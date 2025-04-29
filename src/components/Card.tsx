@@ -9,7 +9,7 @@ function Card({ card }: CardProps) {
 
   return (
     <div
-      className={`relative w-[200px] h-[350px] overflow-hidden rounded-lg border-2 ${
+      className={`relative w-[200px] h-[333px] overflow-hidden rounded-lg border-2 ${
         isAmbush ? "border-red-600 shadow-[0_0_20px_red]" : "border-gray-300"
       }`}
     >

@@ -39,8 +39,12 @@ function GameScreen() {
 
   const startNewSeason = () => {
     const { deck: newDeck, newUsedAmbushId } = createSeasonDeck(usedAmbushIds);
+
+    console.log("New deck for season:", seasons[seasonIndex]);
+    console.table(newDeck); // 👈 Very nice formatting in console
+
     setDeck(newDeck);
-    setUsedAmbushIds((prev) => [...prev, newUsedAmbushId]);
+    setUsedAmbushIds([...usedAmbushIds, newUsedAmbushId]);
     setDrawnCards([]);
     setUsedPoints(0);
   };
@@ -74,13 +78,19 @@ function GameScreen() {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen p-8 gap-8">
+    <div className="flex flex-col items-center min-h-screen p-8">
       <SeasonDisplay
         season={season}
         activeScoring={activeScoring}
         scoringCards={scoringCards}
+        usedPoints={usedPoints}
+        totalPoints={totalPoints}
+        onDrawCard={handleDrawCard}
+        canDraw={usedPoints < totalPoints}
+        onNextSeason={handleNextSeason}
+        canGoNextSeason={usedPoints >= totalPoints}
       />
-      <TurnIndicator usedPoints={usedPoints} totalPoints={totalPoints} />
+
       <DeckArea
         onDrawCard={handleDrawCard}
         canDraw={usedPoints < totalPoints}
