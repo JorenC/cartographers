@@ -17,7 +17,7 @@ function ScoringCardModal({ card, onClose }: ScoringCardModalProps) {
       className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 p-8"
       onClick={handleBackdropClick}
     >
-      <div className="relative bg-white rounded-lg overflow-hidden flex flex-col md:flex-row max-w-3xl w-full max-h-[90vh]">
+      <div className="relative bg-white rounded-lg overflow-hidden flex flex-col md:flex-row w-full max-w-lg md:max-w-3xl max-h-[90vh]">
         {/* Close X Icon */}
         <button
           onClick={onClose}

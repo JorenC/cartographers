@@ -25,7 +25,7 @@ function SeasonDisplay({
   canGoNextSeason,
 }: SeasonDisplayProps) {
   return (
-    <div className="flex justify-between items-start w-full px-8">
+    <div className="flex flex-col-reverse md:flex-row justify-between items-start w-full px-8 gap-6">
       {/* Left side: Season + Points + Draw Button */}
       <div className="flex flex-col gap-2">
         <div className="text-3xl font-bold">
@@ -72,7 +72,7 @@ function SeasonDisplay({
         </div>
 
         {/* Scoring Cards */}
-        <div className="flex gap-4">
+        <div className="grid grid-cols-2 md:flex gap-4">
           {["A", "B", "C", "D"].map((letter) => (
             <div key={letter} className="flex flex-col items-center">
               <ScoringCardDisplay

@@ -15,7 +15,7 @@ function ScoringCardDisplay({ card, active }: ScoringCardDisplayProps) {
       {/* Card clickable box */}
       <div
         onClick={() => setIsOpen(true)}
-        className={`relative w-[150px] h-[200px] overflow-hidden rounded-lg border-2 transition-shadow ${
+        className={`relative w-[100px] h-[130px] md:w-[150px] md:h-[200px] overflow-hidden rounded-lg border-2 transition-shadow ${
           active
             ? "border-lime-700 shadow-[0_0_16px_4px_rgba(77,124,15,0.6)]"
             : "border-gray-300 hover:shadow-md"

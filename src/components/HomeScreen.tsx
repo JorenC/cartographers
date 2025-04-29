@@ -5,7 +5,7 @@ interface HomeScreenProps {
 function HomeScreen({ onStart }: HomeScreenProps) {
   return (
     <div
-      className="min-h-screen bg-cover bg-center flex flex-col items-center justify-center text-white px-4 relative"
+      className="min-h-screen bg-cover bg-left md:bg-center flex flex-col items-center justify-center text-white px-4 relative"
       style={{ backgroundImage: 'url("/splash.png")' }}
     >
       {/* Dark overlay for contrast */}
