@@ -1,4 +1,5 @@
 import { ScoringCard } from "../utils/scoringCards";
+import ScoringCardDisplay from "./ScoringCardDisplay";
 
 interface SeasonDisplayProps {
   season: string;
@@ -16,14 +17,12 @@ function SeasonDisplay({
       <h2 className="text-2xl font-bold">{season}</h2>
       <div className="flex gap-4">
         {["A", "B", "C", "D"].map((letter) => (
-          <div
-            key={letter}
-            className={`p-2 border rounded text-center w-28 ${
-              activeScoring.includes(letter) ? "bg-yellow-300" : ""
-            }`}
-          >
-            <div className="font-bold">{letter}</div>
-            <div className="text-sm">{scoringCards[letter]?.name || ""}</div>
+          <div key={letter} className="flex flex-col items-center">
+            <ScoringCardDisplay
+              card={scoringCards[letter]}
+              active={activeScoring.includes(letter)}
+            />
+            <div className="mt-1 text-xs font-semibold">{letter}</div>
           </div>
         ))}
       </div>

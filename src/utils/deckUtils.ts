@@ -113,28 +113,28 @@ const exploreCards: CardData[] = [
 
 const ambushCards: CardData[] = [
   {
-    id: "a1",
+    id: "m1",
     name: "Bugbear Assault",
     value: 0,
     type: "ambush",
     description: "Bubear Assault Monster Card",
   },
   {
-    id: "a2",
+    id: "m2",
     name: "Goblin Attack",
     value: 0,
     type: "ambush",
     description: "Goblin Attack Monster Card",
   },
   {
-    id: "a3",
+    id: "m3",
     name: "Gnoll Raid",
     value: 0,
     type: "ambush",
     description: "Gnoll Raid Monster Card",
   },
   {
-    id: "a4",
+    id: "m4",
     name: "Kobold Onslaught",
     value: 0,
     type: "ambush",
