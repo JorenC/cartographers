@@ -15,8 +15,10 @@ function ScoringCardDisplay({ card, active }: ScoringCardDisplayProps) {
       {/* Card clickable box */}
       <div
         onClick={() => setIsOpen(true)}
-        className={`relative w-[120px] h-[160px] overflow-hidden rounded-lg border-2 cursor-pointer ${
-          active ? "border-yellow-400" : "border-gray-300"
+        className={`relative w-[150px] h-[200px] overflow-hidden rounded-lg border-2 transition-shadow ${
+          active
+            ? "border-lime-700 shadow-[0_0_16px_4px_rgba(77,124,15,0.6)]"
+            : "border-gray-300 hover:shadow-md"
         } group`}
         title={card.description}
       >
@@ -32,7 +34,7 @@ function ScoringCardDisplay({ card, active }: ScoringCardDisplayProps) {
         />
 
         {/* Full-width dark title overlay at top */}
-        <div className="absolute top-0 left-0 right-0 bg-black bg-opacity-60 text-white text-xs font-bold p-1 text-center">
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 p-1 bg-black bg-opacity-50 text-white text-xs font-bold text-center w-full">
           {card.name}
         </div>
 

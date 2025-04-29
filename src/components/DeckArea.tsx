@@ -10,7 +10,6 @@ function DeckArea({ drawnCards }: DeckAreaProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Auto-scroll to right when a new card is drawn
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
         left: scrollRef.current.scrollWidth,
@@ -22,11 +21,30 @@ function DeckArea({ drawnCards }: DeckAreaProps) {
   return (
     <div
       ref={scrollRef}
-      className="w-full overflow-x-auto mt-6 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100"
+      className="mt-6 overflow-x-auto overflow-y-visible"
+      style={{
+        width: "100%",
+        paddingBottom: "16px", // ensures scrollbar has space
+      }}
     >
-      <div className="flex flex-nowrap items-start gap-4">
+      <div
+        className="flex gap-4 items-start"
+        style={{
+          minWidth: "max-content", // content defines width
+          overflow: "visible", // allows blur
+          paddingLeft: "24px", // allow glow on first card
+          paddingRight: "24px", // allow glow on last card
+        }}
+      >
         {drawnCards.map((card) => (
-          <div key={card.id} className="flex-shrink-0">
+          <div
+            key={card.id}
+            style={{
+              flexShrink: 0,
+              marginTop: "12px", // for glow breathing room
+              marginBottom: "12px",
+            }}
+          >
             <Card card={card} />
           </div>
         ))}

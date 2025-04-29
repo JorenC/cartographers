@@ -46,7 +46,7 @@ function SeasonDisplay({
             disabled={!canDraw}
             className={`px-4 py-2 rounded-md text-white text-sm font-semibold ${
               canDraw
-                ? "bg-blue-600 hover:bg-blue-700"
+                ? "bg-yellow-800 hover:bg-yellow-700"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
           >
@@ -56,7 +56,7 @@ function SeasonDisplay({
           {canGoNextSeason && (
             <button
               onClick={onNextSeason}
-              className="px-4 py-2 rounded-md text-white text-sm font-semibold bg-green-600 hover:bg-green-700"
+              className="px-4 py-2 rounded-md text-white text-sm font-semibold bg-yellow-800 hover:bg-yellow-700"
             >
               Next Season
             </button>
@@ -65,16 +65,24 @@ function SeasonDisplay({
       </div>
 
       {/* Right side: Scoring cards */}
-      <div className="flex gap-4">
-        {["A", "B", "C", "D"].map((letter) => (
-          <div key={letter} className="flex flex-col items-center">
-            <ScoringCardDisplay
-              card={scoringCards[letter]}
-              active={activeScoring.includes(letter)}
-            />
-            <div className="mt-1 text-xs font-semibold">{letter}</div>
-          </div>
-        ))}
+      <div className="relative p-4 border-4 border-[rgba(191,54,12,0.3)] bg-brown-200/20 rounded-lg">
+        {/* Scoring Label */}
+        <div className="absolute -top-4 left-4 bg-white text-brown-200 text-xs px-2 py-1 rounded-md font-bold uppercase tracking-wide">
+          Scoring cards
+        </div>
+
+        {/* Scoring Cards */}
+        <div className="flex gap-4">
+          {["A", "B", "C", "D"].map((letter) => (
+            <div key={letter} className="flex flex-col items-center">
+              <ScoringCardDisplay
+                card={scoringCards[letter]}
+                active={activeScoring.includes(letter)}
+              />
+              <div className="mt-1 text-xs font-semibold">{letter}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

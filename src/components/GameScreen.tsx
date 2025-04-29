@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import SeasonDisplay from "./SeasonDisplay";
 import TurnIndicator from "./TurnIndicator";
 import DeckArea from "./DeckArea";
+import EndGameModal from "./EndGameModal";
 import { createSeasonDeck, CardData, shuffle } from "../utils/deckUtils";
 import { deckA, deckB, deckC, deckD, ScoringCard } from "../utils/scoringCards";
 
@@ -9,6 +10,7 @@ const seasons = ["Spring", "Summer", "Autumn", "Winter"];
 const seasonPointLimits = [8, 8, 7, 6];
 
 function GameScreen() {
+  const [gameOver, setGameOver] = useState(false);
   const [seasonIndex, setSeasonIndex] = useState(0);
   const [usedPoints, setUsedPoints] = useState(0);
   const [drawnCards, setDrawnCards] = useState<CardData[]>([]);
@@ -88,31 +90,36 @@ function GameScreen() {
       setSeasonIndex(seasonIndex + 1);
       startNewSeason();
     } else {
-      alert("Game Over!");
+      setGameOver(true);
     }
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen p-8">
-      <SeasonDisplay
-        season={season}
-        activeScoring={activeScoring}
-        scoringCards={scoringCards}
-        usedPoints={usedPoints}
-        totalPoints={totalPoints}
-        onDrawCard={handleDrawCard}
-        canDraw={usedPoints < totalPoints}
-        onNextSeason={handleNextSeason}
-        canGoNextSeason={usedPoints >= totalPoints}
-      />
+    <>
+      {gameOver && (
+        <EndGameModal
+          scoringCards={scoringCards}
+          onEndGame={() => window.location.reload()}
+        />
+      )}
 
-      <DeckArea
-        onDrawCard={handleDrawCard}
-        canDraw={usedPoints < totalPoints}
-        drawnCards={drawnCards} // no mapping needed anymore
-        onNextSeason={handleNextSeason}
-      />
-    </div>
+      {!gameOver && (
+        <div className="flex flex-col items-center min-h-screen p-8">
+          <SeasonDisplay
+            season={season}
+            activeScoring={activeScoring}
+            scoringCards={scoringCards}
+            usedPoints={usedPoints}
+            totalPoints={totalPoints}
+            onDrawCard={handleDrawCard}
+            canDraw={usedPoints < totalPoints}
+            onNextSeason={handleNextSeason}
+            canGoNextSeason={usedPoints >= totalPoints}
+          />
+          <DeckArea drawnCards={drawnCards} />
+        </div>
+      )}
+    </>
   );
 }
 
