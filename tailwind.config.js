@@ -1,9 +1,12 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        metamorphous: ["Metamorphous", "cursive"], // Add the Metamorphous font family
+      },
+    },
   },
-  plugins: [
-    require("tailwind-scrollbar"), // 👈 Add this line
-  ],
+  plugins: [],
 };
