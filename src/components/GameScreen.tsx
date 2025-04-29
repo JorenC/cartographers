@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import SeasonDisplay from "./SeasonDisplay";
-import TurnIndicator from "./TurnIndicator";
 import DeckArea from "./DeckArea";
 import EndGameModal from "./EndGameModal";
 import { createSeasonDeck, CardData, shuffle } from "../utils/deckUtils";
@@ -22,10 +21,10 @@ function GameScreen() {
 
   const [scoringCards, setScoringCards] = useState<Record<string, ScoringCard>>(
     {
-      A: { id: "", name: "" },
-      B: { id: "", name: "" },
-      C: { id: "", name: "" },
-      D: { id: "", name: "" },
+      A: { id: "", name: "", description: "" },
+      B: { id: "", name: "", description: "" },
+      C: { id: "", name: "", description: "" },
+      D: { id: "", name: "", description: "" },
     },
   );
 
