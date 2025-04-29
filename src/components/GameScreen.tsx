@@ -4,6 +4,7 @@ import DeckArea from "./DeckArea";
 import EndGameModal from "./EndGameModal";
 import { createSeasonDeck, CardData, shuffle } from "../utils/deckUtils";
 import { deckA, deckB, deckC, deckD, ScoringCard } from "../utils/scoringCards";
+import { preloadCardImages } from "../utils/preload";
 
 const seasons = ["Spring", "Summer", "Autumn", "Winter"];
 const seasonPointLimits = [8, 8, 7, 6];
@@ -48,8 +49,7 @@ function GameScreen() {
       newPreviousUndrawnAmbushes,
     } = createSeasonDeck(usedAmbushIds, previousUndrawnAmbushes);
 
-    console.log("New deck for season:", seasons[seasonIndex]);
-    console.table(newDeck);
+    preloadCardImages(newDeck, "explore");
 
     setDeck(newDeck);
     setUsedAmbushIds([...usedAmbushIds, newUsedAmbushId]);
