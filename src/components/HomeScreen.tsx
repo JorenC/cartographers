@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { availableExpansions, Expansion } from "../utils/expansions";
+import { availableExpansions } from "../utils/expansions";
 import { deckA, deckB, deckC, deckD, ScoringCard } from "../utils/scoringCards";
 import { preloadCardImages } from "../utils/preload";
 

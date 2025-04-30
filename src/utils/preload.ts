@@ -1,4 +1,5 @@
 import { CardData } from "./deckUtils";
+import { ScoringCard } from "./scoringCards";
 
 export function preloadCardImages(
   deck: (CardData | ScoringCard)[],

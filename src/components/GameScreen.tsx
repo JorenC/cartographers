@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import SeasonDisplay from "./SeasonDisplay";
 import DeckArea from "./DeckArea";
 import EndGameModal from "./EndGameModal";
@@ -24,8 +24,6 @@ function GameScreen({
   expansions,
   onReturnToHome,
 }: GameScreenProps) {
-  const [showRecap, setShowRecap] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
   const [seasonIndex, setSeasonIndex] = useState(0);
   const [usedPoints, setUsedPoints] = useState(0);
   const [drawnCards, setDrawnCards] = useState<CardData[]>([]);
@@ -34,18 +32,19 @@ function GameScreen({
   const [previousUndrawnAmbushes, setPreviousUndrawnAmbushes] = useState<
     CardData[]
   >([]);
-  const [activeEffectCards, setActiveEffectCards] = useState<CardData[]>([]); // ✅ NEW
+  const [activeEffectCards, setActiveEffectCards] = useState<CardData[]>([]);
+  const [showRecap, setShowRecap] = useState(false);
 
   useEffect(() => {
     startNewSeason();
   }, []);
 
   const startNewSeason = () => {
-    const {
-      deck: newDeck,
-      newUsedAmbushId,
-      newPreviousUndrawnAmbushes,
-    } = createSeasonDeck(usedAmbushIds, previousUndrawnAmbushes, expansions);
+    const { deck: newDeck, newPreviousUndrawnAmbushes } = createSeasonDeck(
+      usedAmbushIds,
+      previousUndrawnAmbushes,
+      expansions,
+    );
 
     preloadCardImages(newDeck, "explore");
 
@@ -68,11 +67,8 @@ function GameScreen({
 
   const handleDrawCard = () => {
     if (deck.length === 0) return;
-
     const nextCard = deck[0];
     const remainingDeck = deck.slice(1);
-
-    console.log(remainingDeck);
 
     setDeck(remainingDeck);
     setDrawnCards((prev) => [...prev, nextCard]);
@@ -89,7 +85,7 @@ function GameScreen({
       setActiveEffectCards((prev) => [...prev, nextCard]);
     }
 
-    // ✅ Check for and run any special card effects
+    // Handle special effects (e.g., Fungoid Outbreak)
     const effectId = specialCardEffects[nextCard.id];
     if (effectId) {
       const effectHandler = specialEffectHandlers[effectId];
@@ -102,7 +98,6 @@ function GameScreen({
           addCardsToDeck: (newDeck) => {
             setDeck(newDeck);
 
-            // ✅ Log the change
             const added = newDeck.find(
               (card) => !deck.includes(card) && card.type === "ambush",
             );
@@ -122,16 +117,16 @@ function GameScreen({
   };
 
   const handleNextSeason = () => {
-    setShowRecap(true); // Show modal first
+    setShowRecap(true); // show recap modal at end of each season
   };
 
   const handleEndSeasonRecap = () => {
     if (seasonIndex < 3) {
-      setSeasonIndex(seasonIndex + 1);
+      setSeasonIndex((prev) => prev + 1);
       startNewSeason();
       setShowRecap(false);
     } else {
-      onReturnToHome();
+      onReturnToHome(); // go back to home screen after winter
     }
   };
 
@@ -147,7 +142,7 @@ function GameScreen({
         />
       )}
 
-      {!gameOver && (
+      {!showRecap && (
         <div className="flex flex-col items-center min-h-screen p-8">
           <SeasonDisplay
             season={season}
@@ -161,6 +156,7 @@ function GameScreen({
             canGoNextSeason={usedPoints >= totalPoints}
             activeEffectCards={activeEffectCards}
           />
+
           <DeckArea drawnCards={drawnCards} />
         </div>
       )}
