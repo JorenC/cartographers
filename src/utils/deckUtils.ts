@@ -1,8 +1,10 @@
+import { availableExpansions } from "./expansions";
+
 export interface CardData {
   id: string;
   name: string;
   value: number;
-  type: "explore" | "ambush";
+  type: "explore" | "ambush" | "scoring";
   description: string;
 }
 
@@ -16,7 +18,7 @@ export function shuffle<T>(array: T[]): T[] {
   return copy;
 }
 
-// Dummy explore cards (you can later replace names and values)
+// Core explore cards
 const exploreCards: CardData[] = [
   {
     id: "e1",
@@ -37,7 +39,7 @@ const exploreCards: CardData[] = [
     name: "Rift Lands",
     value: 0,
     type: "explore",
-    description: "Rift Lands Explore Card.",
+    description: "Rift Lands Explore Card",
   },
   {
     id: "e4",
@@ -111,13 +113,14 @@ const exploreCards: CardData[] = [
   },
 ];
 
-const ambushCards: CardData[] = [
+// Core ambush cards
+const coreAmbushCards: CardData[] = [
   {
     id: "m1",
     name: "Bugbear Assault",
     value: 0,
     type: "ambush",
-    description: "Bubear Assault Monster Card",
+    description: "Bugbear Assault Monster Card",
   },
   {
     id: "m2",
@@ -142,32 +145,102 @@ const ambushCards: CardData[] = [
   },
 ];
 
+// Helper: all cards from core + expansions (auto-generated placeholders for expansion card IDs)
+const allCards: CardData[] = [
+  ...exploreCards,
+  ...coreAmbushCards,
+  ...availableExpansions.flatMap((exp) =>
+    Object.entries(exp.cards).flatMap(([type, cardList]) =>
+      (cardList || []).map((entry) => {
+        const card =
+          typeof entry === "string"
+            ? {
+                id: entry,
+                name: `${exp.name} Card`,
+                description: `${exp.name} card added via expansion`,
+              }
+            : entry;
+
+        return {
+          id: card.id,
+          name: card.name,
+          value: 0,
+          type: type as CardData["type"],
+          description: card.description,
+        };
+      }),
+    ),
+  ),
+];
+
+// Lookup helper
+export function getCardById(id: string): CardData {
+  const found = allCards.find((card) => card.id === id);
+  if (!found) {
+    throw new Error(`Card not found by ID: ${id}`);
+  }
+  return found;
+}
+
+// Main deck generator
 export function createSeasonDeck(
   usedAmbushIds: string[],
   previousUndrawnAmbushes: CardData[],
+  expansions: string[],
 ): {
   deck: CardData[];
   newUsedAmbushId: string;
   newPreviousUndrawnAmbushes: CardData[];
 } {
-  const availableAmbushes = ambushCards.filter(
-    (card) =>
-      !usedAmbushIds.includes(card.id) &&
-      !previousUndrawnAmbushes.some((prev) => prev.id === card.id),
+  // Build ambush deck
+  let allAmbushCards: CardData[] = [...coreAmbushCards];
+  expansions.forEach((expId) => {
+    const exp = availableExpansions.find((e) => e.id === expId);
+    const extra =
+      exp?.cards.ambush?.map((card) =>
+        typeof card === "string"
+          ? getCardById(card)
+          : { ...card, value: 0, type: "ambush" },
+      ) || [];
+    allAmbushCards.push(...extra);
+  });
+
+  const availableAmbushes = shuffle(
+    allAmbushCards.filter(
+      (card) =>
+        !usedAmbushIds.includes(card.id) &&
+        !previousUndrawnAmbushes.some((prev) => prev.id === card.id),
+    ),
   );
 
   if (availableAmbushes.length === 0) {
     throw new Error("No ambush cards left to add!");
   }
 
-  const selectedAmbush = availableAmbushes[0]; // pick the next available
+  const selectedAmbush = availableAmbushes[0];
   const newUndrawnAmbushes = [...previousUndrawnAmbushes, selectedAmbush];
 
-  const deckWithoutAmbush = shuffle(exploreCards);
-  const deck = shuffle([...deckWithoutAmbush, ...newUndrawnAmbushes]);
+  // Build explore deck
+  let fullExploreDeck: CardData[] = [...exploreCards];
+  expansions.forEach((expId) => {
+    const exp = availableExpansions.find((e) => e.id === expId);
+    const extra =
+      exp?.cards.explore?.map((card) =>
+        typeof card === "string"
+          ? getCardById(card)
+          : { ...card, value: 0, type: "explore" },
+      ) || [];
+    fullExploreDeck.push(...extra);
+  });
+
+  // Shuffle and merge
+  const shuffledDeck = shuffle([
+    ...shuffle(fullExploreDeck),
+    ...newUndrawnAmbushes,
+  ]);
 
   return {
-    deck,
+    deck: shuffledDeck,
     newUsedAmbushId: selectedAmbush.id,
     newPreviousUndrawnAmbushes: newUndrawnAmbushes,
   };

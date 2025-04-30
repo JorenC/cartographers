@@ -2,14 +2,19 @@ import { useState, useEffect } from "react";
 import SeasonDisplay from "./SeasonDisplay";
 import DeckArea from "./DeckArea";
 import EndGameModal from "./EndGameModal";
-import { createSeasonDeck, CardData, shuffle } from "../utils/deckUtils";
-import { deckA, deckB, deckC, deckD, ScoringCard } from "../utils/scoringCards";
+import { createSeasonDeck, CardData } from "../utils/deckUtils";
 import { preloadCardImages } from "../utils/preload";
+import { ScoringCard } from "../utils/scoringCards";
 
 const seasons = ["Spring", "Summer", "Autumn", "Winter"];
 const seasonPointLimits = [8, 8, 7, 6];
 
-function GameScreen() {
+interface GameScreenProps {
+  scoringCards: Record<string, ScoringCard>;
+  expansions: string[];
+}
+
+function GameScreen({ scoringCards, expansions }: GameScreenProps) {
   const [gameOver, setGameOver] = useState(false);
   const [seasonIndex, setSeasonIndex] = useState(0);
   const [usedPoints, setUsedPoints] = useState(0);
@@ -20,25 +25,7 @@ function GameScreen() {
     CardData[]
   >([]);
 
-  const [scoringCards, setScoringCards] = useState<Record<string, ScoringCard>>(
-    {
-      A: { id: "", name: "", description: "" },
-      B: { id: "", name: "", description: "" },
-      C: { id: "", name: "", description: "" },
-      D: { id: "", name: "", description: "" },
-    },
-  );
-
   useEffect(() => {
-    // Create the scoring cards once at the start
-    setScoringCards({
-      A: shuffle(deckA)[0],
-      B: shuffle(deckB)[0],
-      C: shuffle(deckC)[0],
-      D: shuffle(deckD)[0],
-    });
-
-    // Start the first season
     startNewSeason();
   }, []);
 
@@ -47,12 +34,14 @@ function GameScreen() {
       deck: newDeck,
       newUsedAmbushId,
       newPreviousUndrawnAmbushes,
-    } = createSeasonDeck(usedAmbushIds, previousUndrawnAmbushes);
+    } = createSeasonDeck(usedAmbushIds, previousUndrawnAmbushes, expansions);
+
+    console.log("Created new season deck:", newDeck);
 
     preloadCardImages(newDeck, "explore");
 
     setDeck(newDeck);
-    setUsedAmbushIds([...usedAmbushIds, newUsedAmbushId]);
+
     setPreviousUndrawnAmbushes(newPreviousUndrawnAmbushes);
     setDrawnCards([]);
     setUsedPoints(0);
@@ -76,11 +65,11 @@ function GameScreen() {
     setDrawnCards([...drawnCards, nextCard]);
     setUsedPoints(usedPoints + nextCard.value);
 
-    // If ambush drawn, remove it from previousUndrawnAmbushes
     if (nextCard.type === "ambush") {
       setPreviousUndrawnAmbushes((prev) =>
         prev.filter((card) => card.id !== nextCard.id),
       );
+      setUsedAmbushIds((prev) => [...prev, nextCard.id]);
     }
   };
 

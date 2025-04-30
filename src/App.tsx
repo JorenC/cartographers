@@ -1,15 +1,32 @@
 import { useState } from "react";
 import HomeScreen from "./components/HomeScreen";
 import GameScreen from "./components/GameScreen";
+import { ScoringCard } from "./utils/scoringCards";
 
 function App() {
   const [screen, setScreen] = useState<"home" | "game">("home");
+  const [scoringCards, setScoringCards] = useState<Record<
+    string,
+    ScoringCard
+  > | null>(null);
+  const [expansions, setExpansions] = useState<string[]>([]);
+
+  const handleStart = (
+    cards: Record<string, ScoringCard>,
+    selectedExpansions: string[],
+  ) => {
+    setScoringCards(cards);
+    setExpansions(selectedExpansions);
+    setScreen("game");
+  };
 
   return (
-    <>
-      {screen === "home" && <HomeScreen onStart={() => setScreen("game")} />}
-      {screen === "game" && <GameScreen />}
-    </>
+    <div className="min-h-screen bg-black text-white">
+      {screen === "home" && <HomeScreen onStart={handleStart} />}
+      {screen === "game" && scoringCards && (
+        <GameScreen scoringCards={scoringCards} expansions={expansions} />
+      )}
+    </div>
   );
 }
 

@@ -1,17 +1,56 @@
+import { useEffect, useState } from "react";
+import { availableExpansions, Expansion } from "../utils/expansions";
+import { deckA, deckB, deckC, deckD, ScoringCard } from "../utils/scoringCards";
+import { preloadCardImages } from "../utils/preload";
+
 interface HomeScreenProps {
-  onStart: () => void;
+  onStart: (
+    scoringCards: Record<string, ScoringCard>,
+    selectedExpansions: string[],
+  ) => void;
 }
 
 function HomeScreen({ onStart }: HomeScreenProps) {
+  const [scoringCards, setScoringCards] = useState<Record<
+    string,
+    ScoringCard
+  > | null>(null);
+  const [selectedExpansions, setSelectedExpansions] = useState<string[]>([]);
+
+  useEffect(() => {
+    const randomFrom = <T,>(deck: T[]): T =>
+      deck[Math.floor(Math.random() * deck.length)];
+    const selected = {
+      A: randomFrom(deckA),
+      B: randomFrom(deckB),
+      C: randomFrom(deckC),
+      D: randomFrom(deckD),
+    };
+    setScoringCards(selected);
+    preloadCardImages(Object.values(selected), "scoring");
+  }, []);
+
+  const toggleExpansion = (id: string) => {
+    setSelectedExpansions((prev) =>
+      prev.includes(id) ? prev.filter((e) => e !== id) : [...prev, id],
+    );
+  };
+
+  const handleStartClick = () => {
+    if (scoringCards) {
+      onStart(scoringCards, selectedExpansions);
+    }
+  };
+
   return (
     <div
       className="min-h-screen bg-cover bg-left md:bg-center flex flex-col items-center justify-center text-white px-4 relative"
       style={{ backgroundImage: 'url("/splash.png")' }}
     >
-      {/* Dark overlay for contrast */}
+      {/* Dark overlay */}
       <div className="absolute inset-0 bg-black bg-opacity-50 z-0"></div>
 
-      {/* Foreground content */}
+      {/* Foreground */}
       <div className="z-10 flex flex-col items-center gap-6 text-center">
         <h1 className="text-5xl font-bold drop-shadow-lg">Cartographers</h1>
         <p className="max-w-xl text-lg drop-shadow">
@@ -47,9 +86,26 @@ function HomeScreen({ onStart }: HomeScreenProps) {
           </a>
         </div>
 
-        {/* Start Game Button */}
+        {/* Expansions */}
+        <div className="mt-6 text-white text-center">
+          <h3 className="text-lg font-semibold mb-2">Expansions</h3>
+          <div className="flex flex-col items-center gap-2">
+            {availableExpansions.map((exp) => (
+              <label key={exp.id} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={selectedExpansions.includes(exp.id)}
+                  onChange={() => toggleExpansion(exp.id)}
+                />
+                {exp.name}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Start Game */}
         <button
-          onClick={onStart}
+          onClick={handleStartClick}
           className="mt-6 px-6 py-3 bg-yellow-800 hover:bg-yellow-700 text-white text-lg rounded-lg shadow-lg"
         >
           Start Game
