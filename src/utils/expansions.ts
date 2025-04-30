@@ -74,7 +74,7 @@ export const availableExpansions: Expansion[] = [
           id: "ambush2m4",
           name: "Fungoid Outbreak",
           description:
-            "After drawing Fungoid Outbreak, shuffle a card from the ambush deck into the explore deck.",
+            "After drawing Fungoid Outbreak, a card from the ambush deck is shuffled into the explore deck.",
         },
       ],
       explore: [],
