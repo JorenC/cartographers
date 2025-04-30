@@ -2,6 +2,7 @@ export interface ExpansionCard {
   id: string;
   name: string;
   description: string;
+  specialEffect?: string;
 }
 
 export interface Expansion {

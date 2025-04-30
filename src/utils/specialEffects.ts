@@ -50,7 +50,7 @@ export const specialEffectHandlers: Record<
             : {
                 ...card,
                 value: 0,
-                type: "ambush",
+                type: "ambush" as const,
               },
         );
         allAmbushCards.push(...cards);
@@ -98,7 +98,7 @@ export const specialCardEffects: Record<
   string, // card ID
   keyof typeof specialEffectHandlers
 > = {
-  ambush2m4: "fungoidAmbushInsert",
+  fungoid1: "fungoidAmbushInsert",
   // Add more special cards like:
   // blight4: "someOtherEffectId"
 };
