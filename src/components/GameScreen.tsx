@@ -13,9 +13,15 @@ const seasonPointLimits = [8, 8, 7, 6];
 interface GameScreenProps {
   scoringCards: Record<string, ScoringCard>;
   expansions: string[];
+  onReturnToHome: () => void;
 }
 
-function GameScreen({ scoringCards, expansions }: GameScreenProps) {
+function GameScreen({
+  scoringCards,
+  expansions,
+  onReturnToHome,
+}: GameScreenProps) {
+  const [showRecap, setShowRecap] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [seasonIndex, setSeasonIndex] = useState(0);
   const [usedPoints, setUsedPoints] = useState(0);
@@ -78,20 +84,28 @@ function GameScreen({ scoringCards, expansions }: GameScreenProps) {
   };
 
   const handleNextSeason = () => {
+    setShowRecap(true); // Show modal first
+  };
+
+  const handleEndSeasonRecap = () => {
     if (seasonIndex < 3) {
       setSeasonIndex(seasonIndex + 1);
       startNewSeason();
+      setShowRecap(false);
     } else {
-      setGameOver(true);
+      onReturnToHome();
     }
   };
 
   return (
     <>
-      {gameOver && (
+      {showRecap && (
         <EndGameModal
           scoringCards={scoringCards}
-          onEndGame={() => window.location.reload()}
+          activeScoring={activeScoring}
+          activeEffectCards={activeEffectCards}
+          isFinalSeason={seasonIndex === 3}
+          onContinue={handleEndSeasonRecap}
         />
       )}
 

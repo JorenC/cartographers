@@ -62,7 +62,7 @@ function SeasonDisplay({
               onClick={onNextSeason}
               className="px-4 py-2 rounded-md text-white text-sm font-semibold bg-yellow-800 hover:bg-yellow-700"
             >
-              {season === "Winter" ? "End Game" : "Next Season"}
+              End Season
             </button>
           )}
         </div>

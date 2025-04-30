@@ -24,7 +24,11 @@ function App() {
     <div className="min-h-screen bg-black text-white">
       {screen === "home" && <HomeScreen onStart={handleStart} />}
       {screen === "game" && scoringCards && (
-        <GameScreen scoringCards={scoringCards} expansions={expansions} />
+        <GameScreen
+          scoringCards={scoringCards}
+          expansions={expansions}
+          onReturnToHome={() => setScreen("home")}
+        />
       )}
     </div>
   );

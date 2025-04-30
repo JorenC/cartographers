@@ -12,7 +12,7 @@ export default function ActiveEffectsBar({ cards }: Props) {
   return (
     <>
       {cards.length > 0 && (
-        <div className="mt-6 w-full flex flex-wrap gap-3 items-center">
+        <div className="mt-4 w-full flex flex-wrap gap-3 items-center">
           <h2 className="text-white font-semibold text-md w-full">
             Active Effects:
           </h2>
