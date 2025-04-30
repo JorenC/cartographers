@@ -12,34 +12,36 @@ function ScoringCardDisplay({ card, active }: ScoringCardDisplayProps) {
 
   return (
     <>
-      {/* Card clickable box */}
       <div
         onClick={() => setIsOpen(true)}
-        className={`relative w-[100px] h-[130px] md:w-[150px] md:h-[200px] overflow-hidden rounded-lg border-2 transition-shadow ${
+        className={`relative w-[100px] h-[100px] md:w-[150px] md:h-[150px] rounded-lg border-2 overflow-hidden transition-shadow cursor-pointer ${
           active
             ? "border-lime-700 shadow-[0_0_16px_4px_rgba(77,124,15,0.6)]"
             : "border-gray-300 hover:shadow-md"
-        } group`}
-        title={card.description}
+        }`}
+        title={card?.description || ""}
       >
-        {/* Card Image */}
+        {/* Background frame image */}
+        <img
+          src="/cards/scoring/background.png"
+          alt=""
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover rounded-lg z-0"
+        />
+
+        {/* Transparent card image */}
         <img
           src={`/cards/scoring/${card.id}.png`}
           alt={card.description}
-          className="w-full h-full object-cover"
+          className="relative w-full h-full object-contain z-10"
           onError={(e) => {
             console.error(`Error loading image for card ID: ${card.id}`);
             (e.target as HTMLImageElement).style.display = "none";
           }}
         />
 
-        {/* Full-width dark title overlay at top */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 p-1 bg-black bg-opacity-50 text-white text-xs font-bold text-center w-full">
-          {card.name}
-        </div>
-
-        {/* Bottom left: Question icon */}
-        <div className="absolute bottom-1 right-1 text-white opacity-80">
+        {/* Bottom right: Info icon */}
+        <div className="absolute bottom-1 right-1 text-white opacity-80 z-20">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4"
@@ -57,7 +59,7 @@ function ScoringCardDisplay({ card, active }: ScoringCardDisplayProps) {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modal for full card description */}
       {isOpen && (
         <ScoringCardModal card={card} onClose={() => setIsOpen(false)} />
       )}
