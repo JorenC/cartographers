@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import SeasonDisplay from "./SeasonDisplay";
 import DeckArea from "./DeckArea";
 import EndGameModal from "./EndGameModal";
+import ActiveEffectsBar from "./ActiveEffectsBar";
 import { createSeasonDeck, CardData } from "../utils/deckUtils";
 import { preloadCardImages } from "../utils/preload";
 import { ScoringCard } from "../utils/scoringCards";
@@ -24,6 +25,7 @@ function GameScreen({ scoringCards, expansions }: GameScreenProps) {
   const [previousUndrawnAmbushes, setPreviousUndrawnAmbushes] = useState<
     CardData[]
   >([]);
+  const [activeEffectCards, setActiveEffectCards] = useState<CardData[]>([]); // ✅ NEW
 
   useEffect(() => {
     startNewSeason();
@@ -36,12 +38,9 @@ function GameScreen({ scoringCards, expansions }: GameScreenProps) {
       newPreviousUndrawnAmbushes,
     } = createSeasonDeck(usedAmbushIds, previousUndrawnAmbushes, expansions);
 
-    console.log("Created new season deck:", newDeck);
-
     preloadCardImages(newDeck, "explore");
 
     setDeck(newDeck);
-
     setPreviousUndrawnAmbushes(newPreviousUndrawnAmbushes);
     setDrawnCards([]);
     setUsedPoints(0);
@@ -70,6 +69,11 @@ function GameScreen({ scoringCards, expansions }: GameScreenProps) {
         prev.filter((card) => card.id !== nextCard.id),
       );
       setUsedAmbushIds((prev) => [...prev, nextCard.id]);
+    }
+
+    // ✅ Handle persistent effects
+    if (nextCard.specialEffect) {
+      setActiveEffectCards((prev) => [...prev, nextCard]);
     }
   };
 
@@ -103,6 +107,7 @@ function GameScreen({ scoringCards, expansions }: GameScreenProps) {
             canDraw={usedPoints < totalPoints}
             onNextSeason={handleNextSeason}
             canGoNextSeason={usedPoints >= totalPoints}
+            activeEffectCards={activeEffectCards}
           />
           <DeckArea drawnCards={drawnCards} />
         </div>

@@ -6,6 +6,7 @@ export interface CardData {
   value: number;
   type: "explore" | "ambush" | "scoring";
   description: string;
+  specialEffect?: string; // ← New: defines the ongoing effect (if any)
 }
 
 // Fisher-Yates shuffle
@@ -194,14 +195,18 @@ export function createSeasonDeck(
 } {
   // Build ambush deck
   let allAmbushCards: CardData[] = [...coreAmbushCards];
+
   expansions.forEach((expId) => {
     const exp = availableExpansions.find((e) => e.id === expId);
     const extra =
-      exp?.cards.ambush?.map((card) =>
-        typeof card === "string"
-          ? getCardById(card)
-          : { ...card, value: 0, type: "ambush" },
-      ) || [];
+      exp?.cards.ambush?.map((card) => ({
+        id: card.id,
+        name: card.name,
+        value: 0,
+        type: "ambush" as const,
+        description: card.description,
+        specialEffect: (card as any).specialEffect, // carry over if exists
+      })) || [];
     allAmbushCards.push(...extra);
   });
 
@@ -225,11 +230,14 @@ export function createSeasonDeck(
   expansions.forEach((expId) => {
     const exp = availableExpansions.find((e) => e.id === expId);
     const extra =
-      exp?.cards.explore?.map((card) =>
-        typeof card === "string"
-          ? getCardById(card)
-          : { ...card, value: 0, type: "explore" },
-      ) || [];
+      exp?.cards.explore?.map((card) => ({
+        id: card.id,
+        name: card.name,
+        value: 0,
+        type: "explore" as const,
+        description: card.description,
+        specialEffect: (card as any).specialEffect,
+      })) || [];
     fullExploreDeck.push(...extra);
   });
 

@@ -1,5 +1,7 @@
 import { ScoringCard } from "../utils/scoringCards";
 import ScoringCardDisplay from "./ScoringCardDisplay";
+import ActiveEffectsBar from "./ActiveEffectsBar"; // ✅ Added
+import { CardData } from "../utils/deckUtils";
 
 interface SeasonDisplayProps {
   season: string;
@@ -11,6 +13,7 @@ interface SeasonDisplayProps {
   canDraw: boolean;
   onNextSeason: () => void;
   canGoNextSeason: boolean;
+  activeEffectCards: CardData[]; // ✅ New prop
 }
 
 function SeasonDisplay({
@@ -23,6 +26,7 @@ function SeasonDisplay({
   canDraw,
   onNextSeason,
   canGoNextSeason,
+  activeEffectCards, // ✅ New prop
 }: SeasonDisplayProps) {
   return (
     <div className="flex flex-col-reverse md:flex-row justify-between items-start w-full px-8 gap-6">
@@ -62,6 +66,9 @@ function SeasonDisplay({
             </button>
           )}
         </div>
+
+        {/* ✅ Active Effects Bar */}
+        <ActiveEffectsBar cards={activeEffectCards} />
       </div>
 
       {/* Right side: Scoring cards */}

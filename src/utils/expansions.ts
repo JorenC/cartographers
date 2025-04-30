@@ -45,6 +45,42 @@ export const availableExpansions: Expansion[] = [
       scoring: [],
     },
   },
+  {
+    id: "ambush2",
+    name: "Ambush 2 Expansion",
+    cards: {
+      ambush: [
+        {
+          id: "ambush2m1",
+          name: "Treefolk Torment",
+          description: "Treefolk Torment Ambush Card",
+          specialEffect:
+            "When all spaces of the Treefolk are surrounded or destroyed, draw two 1x1 forest shapes in any unfilled spaces.",
+        },
+        {
+          id: "ambush2m2",
+          name: "Basilisk Stare",
+          description: "Basilisk Stare Ambush Card",
+          specialEffect:
+            "During scoring, lose two reputation stars for each empty space adjacent to the Basilisk, instead of one.",
+        },
+        {
+          id: "ambush2m3",
+          name: "Naga Shock",
+          description:
+            "After drawing the Naga Shock, destroy two water spaces (draw an X - these spaces count as occupied).",
+        },
+        {
+          id: "ambush2m4",
+          name: "Fungoid Outbreak",
+          description:
+            "After drawing Fungoid Outbreak, shuffle a card from the ambush deck into the explore deck.",
+        },
+      ],
+      explore: [],
+      scoring: [],
+    },
+  },
 ];
 
 /*  {
