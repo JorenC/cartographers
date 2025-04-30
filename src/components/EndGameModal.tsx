@@ -1,6 +1,5 @@
 import { ScoringCard } from "../utils/scoringCards";
 import { CardData } from "../utils/deckUtils";
-import ScoringCardDisplay from "./ScoringCardDisplay";
 
 interface EndGameModalProps {
   scoringCards: Record<string, ScoringCard>;

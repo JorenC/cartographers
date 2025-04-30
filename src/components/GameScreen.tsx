@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import SeasonDisplay from "./SeasonDisplay";
 import DeckArea from "./DeckArea";
 import EndGameModal from "./EndGameModal";
-import ActiveEffectsBar from "./ActiveEffectsBar";
 import { createSeasonDeck, CardData } from "../utils/deckUtils";
 import { preloadCardImages } from "../utils/preload";
 import { ScoringCard } from "../utils/scoringCards";
