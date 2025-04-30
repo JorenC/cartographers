@@ -5,9 +5,10 @@ import ScoringCardModal from "./ScoringCardModal";
 interface ScoringCardDisplayProps {
   card: ScoringCard;
   active: boolean;
+  letter: string;
 }
 
-function ScoringCardDisplay({ card, active }: ScoringCardDisplayProps) {
+function ScoringCardDisplay({ card, active, letter }: ScoringCardDisplayProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -16,8 +17,8 @@ function ScoringCardDisplay({ card, active }: ScoringCardDisplayProps) {
         onClick={() => setIsOpen(true)}
         className={`relative w-[100px] h-[100px] md:w-[150px] md:h-[150px] rounded-lg border-2 overflow-hidden transition-shadow cursor-pointer ${
           active
-            ? "border-lime-700 shadow-[0_0_16px_4px_rgba(77,124,15,0.6)]"
-            : "border-gray-300 hover:shadow-md"
+            ? "border-white shadow-[0_0_12px_2px_rgba(255,255,255,0.9)]"
+            : "border-black"
         }`}
         title={card?.description || ""}
       >
@@ -39,23 +40,14 @@ function ScoringCardDisplay({ card, active }: ScoringCardDisplayProps) {
             (e.target as HTMLImageElement).style.display = "none";
           }}
         />
+      </div>
 
-        {/* Bottom right: Info icon */}
-        <div className="absolute bottom-1 right-1 text-white opacity-80 z-20">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M8 10c0-1.104.896-2 2-2h2c1.104 0 2 .896 2 2 0 1-1 2-2 2s-2 1-2 2m0 4h.01M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
-            />
-          </svg>
+      {/* Title (Letter + Name) */}
+      <div className="text-xs md:text-sm mt-1 text-white text-center max-w-[150px]">
+        {letter} {card.name}
+        {/* Description only if height ≥ 900px */}
+        <div className="hidden [@media(min-height:900px)]:block text-[10px] text-gray-300 mt-1 leading-tight">
+          {card.description}
         </div>
       </div>
 

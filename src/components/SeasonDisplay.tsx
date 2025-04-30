@@ -32,12 +32,7 @@ function SeasonDisplay({
     <div className="flex flex-col-reverse md:flex-row justify-between items-start w-full px-8 gap-6">
       {/* Left side: Season + Points + Draw Button */}
       <div className="flex flex-col gap-2">
-        <div className="text-3xl font-bold">
-          {season}{" "}
-          <span className="text-xl font-normal text-gray-500">
-            ({activeScoring.join(" + ")})
-          </span>
-        </div>
+        <div className="text-3xl font-bold">{season}</div>
 
         <div className="text-md text-gray-600">
           Season length: {usedPoints} / {totalPoints}
@@ -75,7 +70,7 @@ function SeasonDisplay({
       <div className="relative p-4 border-4 border-[rgba(191,54,12,0.3)] bg-brown-200/20 rounded-lg">
         {/* Scoring Label */}
         <div className="absolute -top-4 left-4 bg-white text-black text-xs px-2 py-1 rounded-md font-bold uppercase tracking-wide">
-          Scoring Edicts
+          Scoring Edicts ({activeScoring.join(" + ")})
         </div>
 
         {/* Scoring Cards */}
@@ -88,10 +83,11 @@ function SeasonDisplay({
                 key={letter}
                 className="flex flex-col items-center text-center w-[100px] md:w-[150px]"
               >
-                <ScoringCardDisplay card={card} active={isActive} />
-                <span className="text-xs md:text-sm mt-1 text-white">
-                  {letter}: {card.name}
-                </span>
+                <ScoringCardDisplay
+                  letter={letter}
+                  card={card}
+                  active={isActive}
+                />
               </div>
             );
           })}
