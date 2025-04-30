@@ -6,6 +6,10 @@ import ActiveEffectsBar from "./ActiveEffectsBar";
 import { createSeasonDeck, CardData } from "../utils/deckUtils";
 import { preloadCardImages } from "../utils/preload";
 import { ScoringCard } from "../utils/scoringCards";
+import {
+  specialCardEffects,
+  specialEffectHandlers,
+} from "../utils/specialEffects";
 
 const seasons = ["Spring", "Summer", "Autumn", "Winter"];
 const seasonPointLimits = [8, 8, 7, 6];
@@ -65,10 +69,15 @@ function GameScreen({
 
   const handleDrawCard = () => {
     if (deck.length === 0) return;
+
     const nextCard = deck[0];
-    setDeck(deck.slice(1));
-    setDrawnCards([...drawnCards, nextCard]);
-    setUsedPoints(usedPoints + nextCard.value);
+    const remainingDeck = deck.slice(1);
+
+    console.log(remainingDeck);
+
+    setDeck(remainingDeck);
+    setDrawnCards((prev) => [...prev, nextCard]);
+    setUsedPoints((prev) => prev + nextCard.value);
 
     if (nextCard.type === "ambush") {
       setPreviousUndrawnAmbushes((prev) =>
@@ -77,9 +86,39 @@ function GameScreen({
       setUsedAmbushIds((prev) => [...prev, nextCard.id]);
     }
 
-    // ✅ Handle persistent effects
     if (nextCard.specialEffect) {
       setActiveEffectCards((prev) => [...prev, nextCard]);
+    }
+
+    // ✅ Check for and run any special card effects
+    const effectId = specialCardEffects[nextCard.id];
+    if (effectId) {
+      const effectHandler = specialEffectHandlers[effectId];
+      if (effectHandler) {
+        effectHandler({
+          currentDeck: remainingDeck,
+          usedAmbushIds,
+          previousUndrawnAmbushes,
+          expansions,
+          addCardsToDeck: (newDeck) => {
+            setDeck(newDeck);
+
+            // ✅ Log the change
+            const added = newDeck.find(
+              (card) => !deck.includes(card) && card.type === "ambush",
+            );
+            if (added) {
+              console.log(
+                `Special effect '${effectId}' triggered by ${nextCard.id} — inserted ambush card: ${added.id} (${added.name})`,
+              );
+            } else {
+              console.log(
+                `Special effect '${effectId}' triggered by ${nextCard.id}, but no ambush card was added.`,
+              );
+            }
+          },
+        });
+      }
     }
   };
 
