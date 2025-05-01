@@ -36,7 +36,7 @@ export const deckB: ScoringCard[] = [
     id: "B1",
     name: "Shoreside Expanse",
     description:
-      "Earn 3 reputation for each cluster of Farms not adjacent to Water OR the map edge. Earn 3 reputation for each cluster of Water not adjacent to Farms OR the map edge. A single square counts as cluster.",
+      "Earn 3 reputation for each cluster of Farms not adjacent to Water OR the map edge. Earn 3 reputation for each cluster of Water not adjacent to Farms OR the map edge.",
   },
   {
     id: "B2",
