@@ -46,14 +46,14 @@ function ScoringCardModal({ card, onClose }: ScoringCardModalProps) {
             src="/cards/scoring/background.png"
             alt=""
             aria-hidden
-            className="absolute inset-0 w-full h-full object-cover rounded-lg"
+            className="absolute inset-0 w-full h-full object-cover rounded-tl-lg rounded-bl-lg"
           />
 
           {/* Transparent card */}
           <img
             src={`/cards/scoring/${card.id}.png`}
             alt={card.description}
-            className="relative w-full h-auto max-h-[400px] object-contain z-10"
+            className="relative w-full h-auto max-h-[400px] object-contain z-10 rounded-tl-lg rounded-bl-lg"
             onError={(e) => {
               console.error(`Error loading scoring card image: ${card.id}`);
               (e.target as HTMLImageElement).style.display = "none";

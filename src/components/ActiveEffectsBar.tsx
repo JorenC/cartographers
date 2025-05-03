@@ -45,7 +45,7 @@ export default function ActiveEffectsBar({ cards }: Props) {
           className="fixed inset-0 bg-black bg-opacity-75 z-50 flex justify-center items-center"
           onClick={() => setSelectedCard(null)}
         >
-          <Card card={selectedCard} />
+          <Card card={selectedCard} large />
         </div>
       )}
     </>
