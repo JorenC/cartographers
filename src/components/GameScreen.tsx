@@ -170,6 +170,17 @@ function GameScreen({
     }
   };
 
+  useEffect(() => {
+    if (showRecap && seasonIndex < 3) {
+      const nextSeason = seasons[seasonIndex + 1];
+      const nextBackground = seasonBackgrounds[nextSeason];
+      if (nextBackground) {
+        const img = new Image();
+        img.src = nextBackground;
+      }
+    }
+  }, [showRecap]);
+
   return (
     <>
       {showRecap && (
