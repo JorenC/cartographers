@@ -1,13 +1,14 @@
-import { availableExpansions } from "./expansions";
+import { availableExpansions, ExpansionCard } from "./expansions";
 
 export interface CardData {
   id: string;
   name: string;
   value: number;
-  type: "explore" | "ambush" | "scoring" | "hero"; // ⬅️ Add "hero"
+  type: "explore" | "ambush" | "scoring" | "hero";
   description: string;
   specialEffect?: string;
 }
+
 // Fisher-Yates shuffle
 export function shuffle<T>(array: T[]): T[] {
   const copy = [...array];
@@ -26,10 +27,16 @@ function getBaseSetCards(baseSet: string): {
 } {
   const normalizedBaseSetId = baseSet === "cartographers" ? "base" : baseSet;
   const base = availableExpansions.find((e) => e.id === normalizedBaseSetId);
-  if (!base) throw new Error(`Base set '${baseSet}' not found`);
+  if (!base) {
+    console.error(
+      `Base set '${baseSet}' (normalized: '${normalizedBaseSetId}') not found`,
+    );
+    throw new Error(`Base set '${baseSet}' not found`);
+  }
+
   return {
     explore:
-      base.cards.explore?.map((c) => ({
+      base.cards.explore?.map((c: ExpansionCard) => ({
         id: c.id,
         name: c.name,
         value: c.value || 0,
@@ -38,7 +45,7 @@ function getBaseSetCards(baseSet: string): {
         specialEffect: c.specialEffect,
       })) || [],
     ambush:
-      base.cards.ambush?.map((c) => ({
+      base.cards.ambush?.map((c: ExpansionCard) => ({
         id: c.id,
         name: c.name,
         value: c.value || 0,
@@ -47,7 +54,7 @@ function getBaseSetCards(baseSet: string): {
         specialEffect: c.specialEffect,
       })) || [],
     hero:
-      base.cards.hero?.map((c) => ({
+      base.cards.hero?.map((c: ExpansionCard) => ({
         id: c.id,
         name: c.name,
         value: c.value || 0,
@@ -58,7 +65,6 @@ function getBaseSetCards(baseSet: string): {
   };
 }
 
-// Create the full deck for a season
 export function createSeasonDeck(
   usedAmbushIds: string[],
   previousUndrawnAmbushes: CardData[],
@@ -73,51 +79,18 @@ export function createSeasonDeck(
   newUsedHeroId: string;
   newPreviousUndrawnHeroes: CardData[];
 } {
-  const normalizedBaseSetId = baseSet === "cartographers" ? "base" : baseSet;
-  const base = availableExpansions.find((e) => e.id === normalizedBaseSetId);
-  if (!base) {
-    console.error(
-      `Base set '${baseSet}' (normalized: '${normalizedBaseSetId}') not found`,
-    );
-    throw new Error(`Base set '${baseSet}' not found`);
-  }
-
-  const baseExploreCards =
-    base.cards.explore?.map((c) => ({
-      id: c.id,
-      name: c.name,
-      value: c.value || 0,
-      type: "explore" as const,
-      description: c.description,
-      specialEffect: c.specialEffect,
-    })) || [];
-
-  const baseAmbushCards =
-    base.cards.ambush?.map((c) => ({
-      id: c.id,
-      name: c.name,
-      value: c.value || 0,
-      type: "ambush" as const,
-      description: c.description,
-      specialEffect: c.specialEffect,
-    })) || [];
-
-  const baseHeroCards =
-    base.cards.hero?.map((c) => ({
-      id: c.id,
-      name: c.name,
-      value: c.value || 0,
-      type: "hero" as const,
-      description: c.description,
-      specialEffect: c.specialEffect,
-    })) || [];
+  const {
+    explore: baseExploreCards,
+    ambush: baseAmbushCards,
+    hero: baseHeroCards,
+  } = getBaseSetCards(baseSet);
 
   // --- AMBUSH CARDS ---
   let allAmbushCards: CardData[] = [...baseAmbushCards];
   expansions.forEach((expId) => {
     const exp = availableExpansions.find((e) => e.id === expId);
     const extra =
-      exp?.cards.ambush?.map((card) => ({
+      exp?.cards.ambush?.map((card: ExpansionCard) => ({
         id: card.id,
         name: card.name,
         value: card.value || 0,
@@ -151,7 +124,7 @@ export function createSeasonDeck(
   expansions.forEach((expId) => {
     const exp = availableExpansions.find((e) => e.id === expId);
     const extra =
-      exp?.cards.hero?.map((card) => ({
+      exp?.cards.hero?.map((card: ExpansionCard) => ({
         id: card.id,
         name: card.name,
         value: card.value || 0,
@@ -185,7 +158,7 @@ export function createSeasonDeck(
   expansions.forEach((expId) => {
     const exp = availableExpansions.find((e) => e.id === expId);
     const extra =
-      exp?.cards.explore?.map((card) => ({
+      exp?.cards.explore?.map((card: ExpansionCard) => ({
         id: card.id,
         name: card.name,
         value: card.value || 0,
@@ -196,7 +169,6 @@ export function createSeasonDeck(
     fullExploreDeck.push(...extra);
   });
 
-  // --- FINAL DECK ---
   const fullDeck = [
     ...fullExploreDeck,
     ...newUndrawnAmbushes,
@@ -220,6 +192,7 @@ export function getCardById(id: string): CardData | undefined {
       ...(expansion.cards.explore || []),
       ...(expansion.cards.ambush || []),
       ...(expansion.cards.scoring || []),
+      ...(expansion.cards.hero || []),
     ];
 
     const found = cards.find((card) => card.id === id);
@@ -234,7 +207,9 @@ export function getCardById(id: string): CardData | undefined {
           ? "ambush"
           : expansion.cards.explore?.some((c) => c.id === found.id)
             ? "explore"
-            : "scoring",
+            : expansion.cards.hero?.some((c) => c.id === found.id)
+              ? "hero"
+              : "scoring",
       };
     }
   }

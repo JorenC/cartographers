@@ -38,30 +38,32 @@ export const specialEffectHandlers: Record<
     expansions,
     addCardsToDeck,
   }) => {
-    // Build all ambush cards from active expansions
     let allAmbushCards: CardData[] = [];
 
     for (const expId of expansions) {
       const expansion = availableExpansions.find((e) => e.id === expId);
       if (expansion?.cards.ambush) {
-        const cards = expansion.cards.ambush.map((card) =>
-          typeof card === "string"
-            ? getCardById(card)
-            : {
-                ...card,
-                value: 0,
-                type: "ambush" as const,
-              },
-        );
+        const cards = expansion.cards.ambush.map((card) => {
+          return {
+            id: card.id,
+            name: card.name,
+            value: card.value || 0,
+            type: "ambush" as const,
+            description: card.description,
+            specialEffect: card.specialEffect,
+          };
+        });
         allAmbushCards.push(...cards);
       }
     }
 
-    // Add core ambushes
+    // Add core ambushes using getCardById and filter out undefined
     const coreAmbushIds = ["m1", "m2", "m3", "m4"];
-    allAmbushCards.push(...coreAmbushIds.map(getCardById));
+    const coreAmbushCards = coreAmbushIds
+      .map(getCardById)
+      .filter((c): c is CardData => !!c);
+    allAmbushCards.push(...coreAmbushCards);
 
-    // Remove any already used or queued ambushes
     const alreadyUsedIds = new Set([
       ...usedAmbushIds,
       ...previousUndrawnAmbushes.map((c) => c.id),
@@ -99,6 +101,4 @@ export const specialCardEffects: Record<
   keyof typeof specialEffectHandlers
 > = {
   ambush2m4: "fungoidAmbushInsert",
-  // Add more special cards like:
-  // blight4: "someOtherEffectId"
 };

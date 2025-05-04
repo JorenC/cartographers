@@ -9,8 +9,8 @@ import {
   heroDeckB,
   heroDeckC,
   heroDeckD,
+  ScoringCard,
 } from "../utils/scoringCards";
-
 import { preloadCardImages } from "../utils/preload";
 
 interface HomeScreenProps {
@@ -44,14 +44,24 @@ function HomeScreen({ onStart }: HomeScreenProps) {
     const randomFrom = <T,>(deck: T[]): T =>
       deck[Math.floor(Math.random() * deck.length)];
 
-    const baseDecks = {
+    const baseDecks: {
+      A: ScoringCard[];
+      B: ScoringCard[];
+      C: ScoringCard[];
+      D: ScoringCard[];
+    } = {
       A: baseSet === "heroes" ? heroDeckA : deckA,
       B: baseSet === "heroes" ? heroDeckB : deckB,
       C: baseSet === "heroes" ? heroDeckC : deckC,
       D: baseSet === "heroes" ? heroDeckD : deckD,
     };
 
-    const shuffledLetters = shuffle(["A", "B", "C", "D"]);
+    const shuffledLetters: ("A" | "B" | "C" | "D")[] = shuffle([
+      "A",
+      "B",
+      "C",
+      "D",
+    ]);
 
     const selected: Record<string, ScoringCard> = {};
     shuffledLetters.forEach((letter) => {
@@ -70,7 +80,7 @@ function HomeScreen({ onStart }: HomeScreenProps) {
 
   const handleStartClick = () => {
     if (scoringCards) {
-      onStart(scoringCards, selectedExpansions, baseSet); // ✅ pass baseSet
+      onStart(scoringCards, selectedExpansions, baseSet);
     }
   };
 
@@ -119,7 +129,7 @@ function HomeScreen({ onStart }: HomeScreenProps) {
           <h3 className="text-lg font-semibold mb-2">Expansions</h3>
           <div className="flex flex-col items-center gap-2">
             {availableExpansions
-              .filter((exp) => exp.id !== "base" && exp.id !== "heroes") // ✅ hide base sets //Here we hide the base sets, but we need to changes this later into mix-and-match of monsters
+              .filter((exp) => exp.id !== "base" && exp.id !== "heroes")
               .map((exp) => (
                 <label key={exp.id} className="flex items-center gap-2">
                   <input

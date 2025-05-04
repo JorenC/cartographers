@@ -13,6 +13,7 @@ export interface Expansion {
     ambush?: ExpansionCard[];
     explore?: ExpansionCard[];
     scoring?: ExpansionCard[];
+    hero?: ExpansionCard[]; // ✅ ADD THIS
   };
 }
 
