@@ -98,7 +98,7 @@ export const specialCardEffects: Record<
   string, // card ID
   keyof typeof specialEffectHandlers
 > = {
-  fungoid1: "fungoidAmbushInsert",
+  ambush2m4: "fungoidAmbushInsert",
   // Add more special cards like:
   // blight4: "someOtherEffectId"
 };

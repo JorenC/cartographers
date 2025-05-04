@@ -23,12 +23,14 @@ const seasonBackgrounds: Record<string, string> = {
 interface GameScreenProps {
   scoringCards: Record<string, ScoringCard>;
   expansions: string[];
+  baseSet: "cartographers" | "heroes";
   onReturnToHome: () => void;
 }
 
 function GameScreen({
   scoringCards,
   expansions,
+  baseSet,
   onReturnToHome,
 }: GameScreenProps) {
   const [seasonIndex, setSeasonIndex] = useState(0);
@@ -51,8 +53,10 @@ function GameScreen({
       usedAmbushIds,
       previousUndrawnAmbushes,
       expansions,
+      baseSet,
     );
 
+    console.log(newDeck);
     preloadCardImages(newDeck, "explore");
 
     setDeck(newDeck);

@@ -6,7 +6,7 @@ export interface CardData {
   value: number;
   type: "explore" | "ambush" | "scoring";
   description: string;
-  specialEffect?: string; // ← New: defines the ongoing effect (if any)
+  specialEffect?: string;
 }
 
 // Fisher-Yates shuffle
@@ -19,197 +19,66 @@ export function shuffle<T>(array: T[]): T[] {
   return copy;
 }
 
-// Core explore cards
-const exploreCards: CardData[] = [
-  {
-    id: "e1",
-    name: "Farmland",
-    value: 1,
-    type: "explore",
-    description: "Farmland Explore Card",
-  },
-  {
-    id: "e2",
-    name: "Great River",
-    value: 1,
-    type: "explore",
-    description: "Great River Explore Card",
-  },
-  {
-    id: "e3",
-    name: "Rift Lands",
-    value: 0,
-    type: "explore",
-    description: "Rift Lands Explore Card",
-  },
-  {
-    id: "e4",
-    name: "Homestead",
-    value: 2,
-    type: "explore",
-    description: "A serene lake surrounded by greenery.",
-  },
-  {
-    id: "e5",
-    name: "Forgotten Forest",
-    value: 1,
-    type: "explore",
-    description: "A serene lake surrounded by greenery.",
-  },
-  {
-    id: "e6",
-    name: "Hinterland Stream",
-    value: 2,
-    type: "explore",
-    description: "A serene lake surrounded by greenery.",
-  },
-  {
-    id: "e7",
-    name: "Marshlands",
-    value: 2,
-    type: "explore",
-    description: "A serene lake surrounded by greenery.",
-  },
-  {
-    id: "e8",
-    name: "Outpost Ruins",
-    value: 0,
-    type: "explore",
-    description: "A serene lake surrounded by greenery.",
-  },
-  {
-    id: "e9",
-    name: "Hamlet",
-    value: 1,
-    type: "explore",
-    description: "A serene lake surrounded by greenery.",
-  },
-  {
-    id: "e10",
-    name: "Temple Ruins",
-    value: 0,
-    type: "explore",
-    description: "A serene lake surrounded by greenery.",
-  },
-  {
-    id: "e11",
-    name: "Treetop Village",
-    value: 2,
-    type: "explore",
-    description: "A serene lake surrounded by greenery.",
-  },
-  {
-    id: "e12",
-    name: "Orchard",
-    value: 2,
-    type: "explore",
-    description: "A serene lake surrounded by greenery.",
-  },
-  {
-    id: "e13",
-    name: "Fishing Village",
-    value: 2,
-    type: "explore",
-    description: "A serene lake surrounded by greenery.",
-  },
-];
-
-// Core ambush cards
-const coreAmbushCards: CardData[] = [
-  {
-    id: "m1",
-    name: "Bugbear Assault",
-    value: 0,
-    type: "ambush",
-    description: "Bugbear Assault Monster Card",
-  },
-  {
-    id: "m2",
-    name: "Goblin Attack",
-    value: 0,
-    type: "ambush",
-    description: "Goblin Attack Monster Card",
-  },
-  {
-    id: "m3",
-    name: "Gnoll Raid",
-    value: 0,
-    type: "ambush",
-    description: "Gnoll Raid Monster Card",
-  },
-  {
-    id: "m4",
-    name: "Kobold Onslaught",
-    value: 0,
-    type: "ambush",
-    description: "Kobold Onslaught Monster Card",
-  },
-];
-
-// Helper: all cards from core + expansions (auto-generated placeholders for expansion card IDs)
-const allCards: CardData[] = [
-  ...exploreCards,
-  ...coreAmbushCards,
-  ...availableExpansions.flatMap((exp) =>
-    Object.entries(exp.cards).flatMap(([type, cardList]) =>
-      (cardList || []).map((entry) => {
-        const card =
-          typeof entry === "string"
-            ? {
-                id: entry,
-                name: `${exp.name} Card`,
-                description: `${exp.name} card added via expansion`,
-              }
-            : entry;
-
-        return {
-          id: card.id,
-          name: card.name,
-          value: 0,
-          type: type as CardData["type"],
-          description: card.description,
-        };
-      }),
-    ),
-  ),
-];
-
-// Lookup helper
-export function getCardById(id: string): CardData {
-  const found = allCards.find((card) => card.id === id);
-  if (!found) {
-    throw new Error(`Card not found by ID: ${id}`);
-  }
-  return found;
+// Get cards from base set (e.g., "base" or "heroes")
+function getBaseSetCards(baseSet: string): {
+  explore: CardData[];
+  ambush: CardData[];
+} {
+  const base = availableExpansions.find((e) => e.id === baseSet);
+  if (!base) throw new Error(`Base set '${baseSet}' not found`);
+  return {
+    explore:
+      base.cards.explore?.map((c) => ({
+        id: c.id,
+        name: c.name,
+        value: c.value || 0,
+        type: "explore",
+        description: c.description,
+        specialEffect: c.specialEffect,
+      })) || [],
+    ambush:
+      base.cards.ambush?.map((c) => ({
+        id: c.id,
+        name: c.name,
+        value: c.value || 0,
+        type: "ambush",
+        description: c.description,
+        specialEffect: c.specialEffect,
+      })) || [],
+  };
 }
 
-// Main deck generator
+// Create the full deck for a season
 export function createSeasonDeck(
   usedAmbushIds: string[],
   previousUndrawnAmbushes: CardData[],
   expansions: string[],
+  baseSet: string,
 ): {
   deck: CardData[];
   newUsedAmbushId: string;
   newPreviousUndrawnAmbushes: CardData[];
 } {
-  // Build ambush deck
-  let allAmbushCards: CardData[] = [...coreAmbushCards];
+  const { explore: baseExploreCards, ambush: baseAmbushCards } =
+    getBaseSetCards(baseSet);
 
+  // Combine base + expansion ambush cards
+  let allAmbushCards: CardData[] = [...baseAmbushCards];
   expansions.forEach((expId) => {
     const exp = availableExpansions.find((e) => e.id === expId);
     const extra =
       exp?.cards.ambush?.map((card) => ({
         id: card.id,
         name: card.name,
-        value: 0,
+        value: card.value || 0,
         type: "ambush" as const,
         description: card.description,
-        specialEffect: (card as any).specialEffect, // carry over if exists
+        specialEffect: card.specialEffect,
       })) || [];
     allAmbushCards.push(...extra);
   });
 
+  // Choose next ambush
   const availableAmbushes = shuffle(
     allAmbushCards.filter(
       (card) =>
@@ -225,23 +94,23 @@ export function createSeasonDeck(
   const selectedAmbush = availableAmbushes[0];
   const newUndrawnAmbushes = [...previousUndrawnAmbushes, selectedAmbush];
 
-  // Build explore deck
-  let fullExploreDeck: CardData[] = [...exploreCards];
+  // Combine base + expansion explore cards
+  let fullExploreDeck: CardData[] = [...baseExploreCards];
   expansions.forEach((expId) => {
     const exp = availableExpansions.find((e) => e.id === expId);
     const extra =
       exp?.cards.explore?.map((card) => ({
         id: card.id,
         name: card.name,
-        value: 0,
+        value: card.value || 0,
         type: "explore" as const,
         description: card.description,
-        specialEffect: (card as any).specialEffect,
+        specialEffect: card.specialEffect,
       })) || [];
     fullExploreDeck.push(...extra);
   });
 
-  // Shuffle and merge
+  // Final deck = shuffled explore + current ambush
   const shuffledDeck = shuffle([
     ...shuffle(fullExploreDeck),
     ...newUndrawnAmbushes,
@@ -252,4 +121,32 @@ export function createSeasonDeck(
     newUsedAmbushId: selectedAmbush.id,
     newPreviousUndrawnAmbushes: newUndrawnAmbushes,
   };
+}
+
+export function getCardById(id: string): CardData | undefined {
+  for (const expansion of availableExpansions) {
+    const cards = [
+      ...(expansion.cards.explore || []),
+      ...(expansion.cards.ambush || []),
+      ...(expansion.cards.scoring || []),
+    ];
+
+    const found = cards.find((card) => card.id === id);
+    if (found) {
+      return {
+        id: found.id,
+        name: found.name,
+        value: found.value || 0,
+        description: found.description,
+        specialEffect: found.specialEffect,
+        type: expansion.cards.ambush?.some((c) => c.id === found.id)
+          ? "ambush"
+          : expansion.cards.explore?.some((c) => c.id === found.id)
+            ? "explore"
+            : "scoring",
+      };
+    }
+  }
+
+  return undefined;
 }

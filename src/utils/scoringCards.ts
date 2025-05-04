@@ -111,3 +111,111 @@ export const deckD: ScoringCard[] = [
       "Earn 6 reputation for each complete row or column of filled spaces. Mountains and Wastelands counted as filled spaces.",
   },
 ];
+
+export const heroDeckA: ScoringCard[] = [
+  {
+    id: "HA1",
+    name: "Deepwood",
+    description:
+      "Earn six reputation for each cluster of five or more forests not adjacent to any village.",
+  },
+  {
+    id: "HA2",
+    name: "Heart of the Forest",
+    description:
+      "Earn two reputation for each forest surrounded on all four sides by forests or the edge of the map.",
+  },
+  {
+    id: "HA3",
+    name: "Faunlost Thicket",
+    description:
+      "Earn two reputation for each forest in the longest unbroken column of forests.",
+  },
+  {
+    id: "HA4",
+    name: "Sleepy Valley",
+    description:
+      "Earn four reputation for each row that contains three or more forests.",
+  },
+];
+
+export const heroDeckB: ScoringCard[] = [
+  {
+    id: "HB1",
+    name: "Caravansary",
+    description:
+      "Choose a cluster of villages and earn one reputation for each row and column that contain a village from that cluster.",
+  },
+  {
+    id: "HB2",
+    name: "Traylo Monastery",
+    description:
+      "Earn seven reputation for each cluster of villages that contains four spaces in a 4x1 or 1x4 rectangle.",
+  },
+  {
+    id: "HB3",
+    name: "Gnomish Colony",
+    description:
+      "Earn six reputation for each cluster of villages that contains four spaces in a 2x2 square.",
+  },
+  {
+    id: "HB4",
+    name: "Outer Enclave",
+    description:
+      "Choose a cluster of villages and earn one reputation for each empty space adjacent to that cluster.",
+  },
+];
+
+export const heroDeckC: ScoringCard[] = [
+  {
+    id: "HC1",
+    name: "Jorekburg",
+    description:
+      "Earn four reputation for each column that contains and equal number of farms and waters, with at least one of each.",
+  },
+  {
+    id: "HC2",
+    name: "Ulem's Wallow",
+    description:
+      "Earn two reputation for each water adjacent to two or more farms.",
+  },
+  {
+    id: "HC3",
+    name: "Craylund",
+    description:
+      "Earn seven reputation for each cluster of farms adjacent to three or more waters.",
+  },
+  {
+    id: "HC4",
+    name: "Clawsgrave peak",
+    description:
+      "Earn five reputation for each mountain connected to a farm by a cluster of waters.",
+  },
+];
+
+export const heroDeckD: ScoringCard[] = [
+  {
+    id: "HD1",
+    name: "Dwarvenholds",
+    description:
+      "Earn seven reputation for each completely filled row or column that contains a mountain space.",
+  },
+  {
+    id: "HD2",
+    name: "Banded Hills",
+    description:
+      "Earn four reputation for each row that contains five or more different terrains.",
+  },
+  {
+    id: "HD3",
+    name: "Starlit Sigil",
+    description:
+      "Earn four reputation for each cluster of exactly three empty spaces surrounded on all sides by filled spaces or the edge of the map.",
+  },
+  {
+    id: "HD4",
+    name: "Silos",
+    description:
+      "Earn ten reputation for each complete odd-numbered column of filled spaces.",
+  },
+];

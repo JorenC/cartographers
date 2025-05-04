@@ -10,13 +10,18 @@ function App() {
     ScoringCard
   > | null>(null);
   const [expansions, setExpansions] = useState<string[]>([]);
+  const [baseSet, setBaseSet] = useState<"cartographers" | "heroes">(
+    "cartographers",
+  );
 
   const handleStart = (
     cards: Record<string, ScoringCard>,
     selectedExpansions: string[],
+    base: "cartographers" | "heroes",
   ) => {
     setScoringCards(cards);
     setExpansions(selectedExpansions);
+    setBaseSet(base); // ✅ save selected base set
     setScreen("game");
   };
 
@@ -27,6 +32,7 @@ function App() {
         <GameScreen
           scoringCards={scoringCards}
           expansions={expansions}
+          baseSet={baseSet} // ✅ ADD THIS
           onReturnToHome={() => setScreen("home")}
         />
       )}
