@@ -13,6 +13,13 @@ import {
 const seasons = ["Spring", "Summer", "Autumn", "Winter"];
 const seasonPointLimits = [8, 8, 7, 6];
 
+const seasonBackgrounds: Record<string, string> = {
+  Spring: "/backgroundspring.png",
+  Summer: "/backgroundsummer.png",
+  Autumn: "/backgroundautumn.png",
+  Winter: "/backgroundwinter.png",
+};
+
 interface GameScreenProps {
   scoringCards: Record<string, ScoringCard>;
   expansions: string[];
@@ -138,26 +145,38 @@ function GameScreen({
           activeScoring={activeScoring}
           activeEffectCards={activeEffectCards}
           isFinalSeason={seasonIndex === 3}
+          season={season} // ✅ Pass season
           onContinue={handleEndSeasonRecap}
         />
       )}
 
       {!showRecap && (
-        <div className="flex flex-col items-center min-h-screen p-8">
-          <SeasonDisplay
-            season={season}
-            activeScoring={activeScoring}
-            scoringCards={scoringCards}
-            usedPoints={usedPoints}
-            totalPoints={totalPoints}
-            onDrawCard={handleDrawCard}
-            canDraw={usedPoints < totalPoints}
-            onNextSeason={handleNextSeason}
-            canGoNextSeason={usedPoints >= totalPoints}
-            activeEffectCards={activeEffectCards}
-          />
+        <div className="relative w-full min-h-screen overflow-visible">
+          {/* Spring background image */}
+          {seasonBackgrounds[season] && (
+            <div
+              className="absolute inset-0 bg-cover bg-center opacity-20 z-0 pointer-events-none"
+              style={{ backgroundImage: `url(${seasonBackgrounds[season]})` }}
+            />
+          )}
 
-          <DeckArea drawnCards={drawnCards} />
+          {/* Foreground app content */}
+          <div className="relative z-10 flex flex-col items-stretch p-8 min-h-screen overflow-visible">
+            <SeasonDisplay
+              season={season}
+              activeScoring={activeScoring}
+              scoringCards={scoringCards}
+              usedPoints={usedPoints}
+              totalPoints={totalPoints}
+              onDrawCard={handleDrawCard}
+              canDraw={usedPoints < totalPoints}
+              onNextSeason={handleNextSeason}
+              canGoNextSeason={usedPoints >= totalPoints}
+              activeEffectCards={activeEffectCards}
+            />
+
+            <DeckArea drawnCards={drawnCards} />
+          </div>
         </div>
       )}
     </>

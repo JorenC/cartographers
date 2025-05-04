@@ -20,41 +20,34 @@ function DeckArea({ drawnCards }: DeckAreaProps) {
   }, [drawnCards.length]);
 
   return (
-    <div
-      ref={scrollRef}
-      className="mt-6 overflow-x-auto overflow-y-visible"
-      style={{
-        width: "100%",
-        paddingBottom: "16px", // ensures scrollbar has space
-      }}
-    >
+    <div className="w-full mt-6 pb-4 overflow-visible">
       <div
-        className="flex gap-4 items-start"
-        style={{
-          minWidth: "max-content", // content defines width
-          overflow: "visible", // allows blur
-          paddingLeft: "24px", // allow glow on first card
-          paddingRight: "24px", // allow glow on last card
-        }}
+        className="w-full overflow-x-auto overflow-y-visible py-12"
+        ref={scrollRef}
       >
-        {drawnCards.map((card) => (
-          <div
-            key={card.id}
-            onClick={() => setSelectedCard(card)}
-            className="cursor-pointer hover:scale-105 transition-transform"
-          >
-            <Card card={card} />
-          </div>
-        ))}
+        <div
+          className="flex gap-4 items-start overflow-visible px-6"
+          style={{ minWidth: "max-content" }}
+        >
+          {drawnCards.map((card) => (
+            <div
+              key={card.id}
+              onClick={() => setSelectedCard(card)}
+              className="cursor-pointer p-1"
+            >
+              <Card card={card} />
+            </div>
+          ))}
 
-        {selectedCard && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-75 z-50 flex justify-center items-center"
-            onClick={() => setSelectedCard(null)}
-          >
-            <Card card={selectedCard} large />
-          </div>
-        )}
+          {selectedCard && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-75 z-50 flex justify-center items-center"
+              onClick={() => setSelectedCard(null)}
+            >
+              <Card card={selectedCard} large />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

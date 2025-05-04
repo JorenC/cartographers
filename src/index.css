@@ -2,11 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Hide scrollbars in most browsers */
-::-webkit-scrollbar {
-	display: none;
-}
 body {
 	@apply font-metamorphous;
 	@apply bg-black text-white;
+}
+
+* {
+	scrollbar-width: auto !important;
+	-ms-overflow-style: auto !important;
 }

@@ -1,6 +1,6 @@
 interface CardProps {
   card: CardData;
-  large?: boolean; // <-- Add this
+  large?: boolean;
 }
 
 function Card({ card, large = false }: CardProps) {
@@ -10,14 +10,14 @@ function Card({ card, large = false }: CardProps) {
 
   return (
     <div
-      className={`relative ${width} ${height} overflow-hidden rounded-lg border-2 ${
-        isAmbush ? "border-red-600 shadow-[0_0_20px_red]" : "border-gray-300"
+      className={`relative ${width} ${height} overflow-hidden transition-transform duration-300 hover:scale-110 rounded-lg  border-2 ${
+        isAmbush ? "border-red-600 shadow-[0_0_20px_red]" : "border-black-300"
       }`}
     >
       <img
         src={`/cards/${card.id}.png`}
         alt={card.description}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover "
         onError={(e) => {
           (e.target as HTMLImageElement).src = "";
         }}
