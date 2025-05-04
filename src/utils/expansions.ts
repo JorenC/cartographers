@@ -250,27 +250,27 @@ export const availableExpansions: Expansion[] = [
       hero: [
         {
           id: "hh1",
-          name: "Cool guy",
+          name: "Freyla the True",
           value: 0,
-          description: "Cool guy hero",
+          description: "Freyla the True hero",
         },
         {
           id: "hh2",
-          name: "Cool girl",
+          name: "Dobrik of Lorkheim",
           value: 0,
-          description: "Cool guy hero",
+          description: "Dobrik of Lorkheim hero",
         },
         {
           id: "hh3",
-          name: "Cool chick",
+          name: "Wren the Lioness",
           value: 0,
-          description: "Cool guy hero",
+          description: "Wren the Lioness hero",
         },
         {
           id: "hh4",
-          name: "Cool babe",
+          name: "Dal of Jolev",
           value: 0,
-          description: "Cool guy hero",
+          description: "Dal of Jolev Hero",
         },
       ],
     },
@@ -335,6 +335,36 @@ export const availableExpansions: Expansion[] = [
           name: "Fungoid Outbreak",
           description:
             "After drawing Fungoid Outbreak, a card from the ambush deck is shuffled into the explore deck.",
+        },
+      ],
+      explore: [],
+      scoring: [],
+    },
+  },
+  {
+    id: "champions",
+    name: "Champions Expansion",
+    cards: {
+      hero: [
+        {
+          id: "ch1",
+          name: "Hazan the Mighty",
+          description: "Hazan the Mighty hero",
+        },
+        {
+          id: "ch2",
+          name: "Yuvi Twohearts",
+          description: "Yuvi Twohearts hero",
+        },
+        {
+          id: "ch3",
+          name: "Plex the Tyrant",
+          description: "Plex the Tyrant hero",
+        },
+        {
+          id: "ch4",
+          name: "Immortal Knight",
+          description: "Immortal Knight hero",
         },
       ],
       explore: [],
