@@ -24,7 +24,8 @@ function getBaseSetCards(baseSet: string): {
   ambush: CardData[];
   hero: CardData[];
 } {
-  const base = availableExpansions.find((e) => e.id === baseSet);
+  const normalizedBaseSetId = baseSet === "cartographers" ? "base" : baseSet;
+  const base = availableExpansions.find((e) => e.id === normalizedBaseSetId);
   if (!base) throw new Error(`Base set '${baseSet}' not found`);
   return {
     explore:
@@ -69,16 +70,49 @@ export function createSeasonDeck(
   deck: CardData[];
   newUsedAmbushId: string;
   newPreviousUndrawnAmbushes: CardData[];
-  newUsedHeroId: string; // may be ""
+  newUsedHeroId: string;
   newPreviousUndrawnHeroes: CardData[];
 } {
-  const {
-    explore: baseExploreCards,
-    ambush: baseAmbushCards,
-    hero: baseHeroCards,
-  } = getBaseSetCards(baseSet);
+  const normalizedBaseSetId = baseSet === "cartographers" ? "base" : baseSet;
+  const base = availableExpansions.find((e) => e.id === normalizedBaseSetId);
+  if (!base) {
+    console.error(
+      `Base set '${baseSet}' (normalized: '${normalizedBaseSetId}') not found`,
+    );
+    throw new Error(`Base set '${baseSet}' not found`);
+  }
 
-  // Ambush cards
+  const baseExploreCards =
+    base.cards.explore?.map((c) => ({
+      id: c.id,
+      name: c.name,
+      value: c.value || 0,
+      type: "explore" as const,
+      description: c.description,
+      specialEffect: c.specialEffect,
+    })) || [];
+
+  const baseAmbushCards =
+    base.cards.ambush?.map((c) => ({
+      id: c.id,
+      name: c.name,
+      value: c.value || 0,
+      type: "ambush" as const,
+      description: c.description,
+      specialEffect: c.specialEffect,
+    })) || [];
+
+  const baseHeroCards =
+    base.cards.hero?.map((c) => ({
+      id: c.id,
+      name: c.name,
+      value: c.value || 0,
+      type: "hero" as const,
+      description: c.description,
+      specialEffect: c.specialEffect,
+    })) || [];
+
+  // --- AMBUSH CARDS ---
   let allAmbushCards: CardData[] = [...baseAmbushCards];
   expansions.forEach((expId) => {
     const exp = availableExpansions.find((e) => e.id === expId);
@@ -102,14 +136,17 @@ export function createSeasonDeck(
     ),
   );
 
-  if (availableAmbushes.length === 0) {
-    throw new Error("No ambush cards left to add!");
+  let selectedAmbush: CardData | null = null;
+  let newUndrawnAmbushes = [...previousUndrawnAmbushes];
+
+  if (availableAmbushes.length > 0) {
+    selectedAmbush = availableAmbushes[0];
+    newUndrawnAmbushes = [...newUndrawnAmbushes, selectedAmbush];
+  } else {
+    console.log("No ambush cards left to add this season.");
   }
 
-  const selectedAmbush = availableAmbushes[0];
-  const newUndrawnAmbushes = [...previousUndrawnAmbushes, selectedAmbush];
-
-  // Hero cards
+  // --- HERO CARDS ---
   let allHeroCards: CardData[] = [...baseHeroCards];
   expansions.forEach((expId) => {
     const exp = availableExpansions.find((e) => e.id === expId);
@@ -125,9 +162,6 @@ export function createSeasonDeck(
     allHeroCards.push(...extra);
   });
 
-  let selectedHero: CardData | null = null;
-  let newUndrawnHeroes = [...previousUndrawnHeroes];
-
   const availableHeroes = shuffle(
     allHeroCards.filter(
       (card) =>
@@ -136,6 +170,9 @@ export function createSeasonDeck(
     ),
   );
 
+  let selectedHero: CardData | null = null;
+  let newUndrawnHeroes = [...previousUndrawnHeroes];
+
   if (availableHeroes.length > 0) {
     selectedHero = availableHeroes[0];
     newUndrawnHeroes = [...newUndrawnHeroes, selectedHero];
@@ -143,7 +180,7 @@ export function createSeasonDeck(
     console.log("No hero cards left to add this season.");
   }
 
-  // Explore cards
+  // --- EXPLORE CARDS ---
   let fullExploreDeck: CardData[] = [...baseExploreCards];
   expansions.forEach((expId) => {
     const exp = availableExpansions.find((e) => e.id === expId);
@@ -159,16 +196,18 @@ export function createSeasonDeck(
     fullExploreDeck.push(...extra);
   });
 
-  // Final deck
-  const shuffledDeck = shuffle([
-    ...shuffle(fullExploreDeck),
+  // --- FINAL DECK ---
+  const fullDeck = [
+    ...fullExploreDeck,
     ...newUndrawnAmbushes,
     ...newUndrawnHeroes,
-  ]);
+  ];
+
+  const shuffledDeck = shuffle(fullDeck);
 
   return {
     deck: shuffledDeck,
-    newUsedAmbushId: selectedAmbush.id,
+    newUsedAmbushId: selectedAmbush ? selectedAmbush.id : "",
     newPreviousUndrawnAmbushes: newUndrawnAmbushes,
     newUsedHeroId: selectedHero ? selectedHero.id : "",
     newPreviousUndrawnHeroes: newUndrawnHeroes,

@@ -74,7 +74,12 @@ function GameScreen({
     setDeck(newDeck);
     setPreviousUndrawnAmbushes(newPreviousUndrawnAmbushes);
     setPreviousUndrawnHeroes(newPreviousUndrawnHeroes);
-    setUsedAmbushIds((prev) => [...prev, newUsedAmbushId]);
+
+    console.log(newDeck);
+
+    if (newUsedAmbushId) {
+      setUsedAmbushIds((prev) => [...prev, newUsedAmbushId]);
+    }
     if (newUsedHeroId) {
       setUsedHeroIds((prev) => [...prev, newUsedHeroId]);
     }
