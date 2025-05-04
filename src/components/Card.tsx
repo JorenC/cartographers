@@ -1,3 +1,5 @@
+import { CardData } from "../utils/deckUtils";
+
 interface CardProps {
   card: CardData;
   large?: boolean;
