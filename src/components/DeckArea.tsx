@@ -41,7 +41,11 @@ function DeckArea({ drawnCards }: DeckAreaProps) {
 
           {selectedCard && (
             <div
-              className="fixed inset-0 bg-black bg-opacity-75 z-50 flex justify-center items-center"
+              className={`fixed inset-0 z-50 flex justify-center items-center ${
+                selectedCard.type === "hero"
+                  ? "bg-gray-900 bg-opacity-75"
+                  : "bg-black bg-opacity-75"
+              }`}
               onClick={() => setSelectedCard(null)}
             >
               <Card card={selectedCard} large />

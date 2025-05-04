@@ -217,12 +217,14 @@ export const availableExpansions: Expansion[] = [
         {
           id: "hm1",
           name: "Gorgon Gaze",
+          value: 0,
           description:
             "After drawing the Gorgon, destroy an adjacent non-mountain space",
         },
         {
           id: "hm2",
           name: "Zombie Plague",
+          value: 0,
           description: "Zombie Plague Explore card",
           specialEffect:
             "After each scoring season, draw a Zombie in each empty space adjacent to a Zombie.",
@@ -230,6 +232,7 @@ export const availableExpansions: Expansion[] = [
         {
           id: "hm3",
           name: "Giant Troll Ravage",
+          value: 0,
           description: "Giant Troll Ravage Explore card",
           specialEffect:
             "After each scoring season, destroy an empty space adjacent to the Giant Troll.",
@@ -237,9 +240,36 @@ export const availableExpansions: Expansion[] = [
         {
           id: "hm4",
           name: "Dragon Inferno",
+          value: 0,
           description: "Dragon Inferno Explore card",
           specialEffect:
             "When all spaces of the Dragon are surrounded or destroyed, gain 3 coins.",
+        },
+      ],
+      hero: [
+        {
+          id: "hh1",
+          name: "Cool guy",
+          value: 0,
+          description: "Cool guy hero",
+        },
+        {
+          id: "hh2",
+          name: "Cool girl",
+          value: 0,
+          description: "Cool guy hero",
+        },
+        {
+          id: "hh3",
+          name: "Cool chick",
+          value: 0,
+          description: "Cool guy hero",
+        },
+        {
+          id: "hh4",
+          name: "Cool babe",
+          value: 0,
+          description: "Cool guy hero",
         },
       ],
     },

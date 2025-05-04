@@ -4,11 +4,10 @@ export interface CardData {
   id: string;
   name: string;
   value: number;
-  type: "explore" | "ambush" | "scoring";
+  type: "explore" | "ambush" | "scoring" | "hero"; // ⬅️ Add "hero"
   description: string;
   specialEffect?: string;
 }
-
 // Fisher-Yates shuffle
 export function shuffle<T>(array: T[]): T[] {
   const copy = [...array];
@@ -23,6 +22,7 @@ export function shuffle<T>(array: T[]): T[] {
 function getBaseSetCards(baseSet: string): {
   explore: CardData[];
   ambush: CardData[];
+  hero: CardData[];
 } {
   const base = availableExpansions.find((e) => e.id === baseSet);
   if (!base) throw new Error(`Base set '${baseSet}' not found`);
@@ -45,6 +45,15 @@ function getBaseSetCards(baseSet: string): {
         description: c.description,
         specialEffect: c.specialEffect,
       })) || [],
+    hero:
+      base.cards.hero?.map((c) => ({
+        id: c.id,
+        name: c.name,
+        value: c.value || 0,
+        type: "hero",
+        description: c.description,
+        specialEffect: c.specialEffect,
+      })) || [],
   };
 }
 
@@ -52,17 +61,24 @@ function getBaseSetCards(baseSet: string): {
 export function createSeasonDeck(
   usedAmbushIds: string[],
   previousUndrawnAmbushes: CardData[],
+  usedHeroIds: string[],
+  previousUndrawnHeroes: CardData[],
   expansions: string[],
   baseSet: string,
 ): {
   deck: CardData[];
   newUsedAmbushId: string;
   newPreviousUndrawnAmbushes: CardData[];
+  newUsedHeroId: string; // may be ""
+  newPreviousUndrawnHeroes: CardData[];
 } {
-  const { explore: baseExploreCards, ambush: baseAmbushCards } =
-    getBaseSetCards(baseSet);
+  const {
+    explore: baseExploreCards,
+    ambush: baseAmbushCards,
+    hero: baseHeroCards,
+  } = getBaseSetCards(baseSet);
 
-  // Combine base + expansion ambush cards
+  // Ambush cards
   let allAmbushCards: CardData[] = [...baseAmbushCards];
   expansions.forEach((expId) => {
     const exp = availableExpansions.find((e) => e.id === expId);
@@ -78,7 +94,6 @@ export function createSeasonDeck(
     allAmbushCards.push(...extra);
   });
 
-  // Choose next ambush
   const availableAmbushes = shuffle(
     allAmbushCards.filter(
       (card) =>
@@ -94,7 +109,41 @@ export function createSeasonDeck(
   const selectedAmbush = availableAmbushes[0];
   const newUndrawnAmbushes = [...previousUndrawnAmbushes, selectedAmbush];
 
-  // Combine base + expansion explore cards
+  // Hero cards
+  let allHeroCards: CardData[] = [...baseHeroCards];
+  expansions.forEach((expId) => {
+    const exp = availableExpansions.find((e) => e.id === expId);
+    const extra =
+      exp?.cards.hero?.map((card) => ({
+        id: card.id,
+        name: card.name,
+        value: card.value || 0,
+        type: "hero" as const,
+        description: card.description,
+        specialEffect: card.specialEffect,
+      })) || [];
+    allHeroCards.push(...extra);
+  });
+
+  let selectedHero: CardData | null = null;
+  let newUndrawnHeroes = [...previousUndrawnHeroes];
+
+  const availableHeroes = shuffle(
+    allHeroCards.filter(
+      (card) =>
+        !usedHeroIds.includes(card.id) &&
+        !previousUndrawnHeroes.some((prev) => prev.id === card.id),
+    ),
+  );
+
+  if (availableHeroes.length > 0) {
+    selectedHero = availableHeroes[0];
+    newUndrawnHeroes = [...newUndrawnHeroes, selectedHero];
+  } else {
+    console.log("No hero cards left to add this season.");
+  }
+
+  // Explore cards
   let fullExploreDeck: CardData[] = [...baseExploreCards];
   expansions.forEach((expId) => {
     const exp = availableExpansions.find((e) => e.id === expId);
@@ -110,16 +159,19 @@ export function createSeasonDeck(
     fullExploreDeck.push(...extra);
   });
 
-  // Final deck = shuffled explore + current ambush
+  // Final deck
   const shuffledDeck = shuffle([
     ...shuffle(fullExploreDeck),
     ...newUndrawnAmbushes,
+    ...newUndrawnHeroes,
   ]);
 
   return {
     deck: shuffledDeck,
     newUsedAmbushId: selectedAmbush.id,
     newPreviousUndrawnAmbushes: newUndrawnAmbushes,
+    newUsedHeroId: selectedHero ? selectedHero.id : "",
+    newPreviousUndrawnHeroes: newUndrawnHeroes,
   };
 }
 

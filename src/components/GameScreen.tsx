@@ -41,6 +41,11 @@ function GameScreen({
   const [previousUndrawnAmbushes, setPreviousUndrawnAmbushes] = useState<
     CardData[]
   >([]);
+  const [usedHeroIds, setUsedHeroIds] = useState<string[]>([]);
+  const [previousUndrawnHeroes, setPreviousUndrawnHeroes] = useState<
+    CardData[]
+  >([]);
+
   const [activeEffectCards, setActiveEffectCards] = useState<CardData[]>([]);
   const [showRecap, setShowRecap] = useState(false);
 
@@ -49,18 +54,30 @@ function GameScreen({
   }, []);
 
   const startNewSeason = () => {
-    const { deck: newDeck, newPreviousUndrawnAmbushes } = createSeasonDeck(
+    const {
+      deck: newDeck,
+      newPreviousUndrawnAmbushes,
+      newUsedAmbushId,
+      newUsedHeroId,
+      newPreviousUndrawnHeroes,
+    } = createSeasonDeck(
       usedAmbushIds,
       previousUndrawnAmbushes,
+      usedHeroIds,
+      previousUndrawnHeroes,
       expansions,
       baseSet,
     );
 
-    console.log(newDeck);
     preloadCardImages(newDeck, "explore");
 
     setDeck(newDeck);
     setPreviousUndrawnAmbushes(newPreviousUndrawnAmbushes);
+    setPreviousUndrawnHeroes(newPreviousUndrawnHeroes);
+    setUsedAmbushIds((prev) => [...prev, newUsedAmbushId]);
+    if (newUsedHeroId) {
+      setUsedHeroIds((prev) => [...prev, newUsedHeroId]);
+    }
     setDrawnCards([]);
     setUsedPoints(0);
   };
@@ -90,6 +107,13 @@ function GameScreen({
         prev.filter((card) => card.id !== nextCard.id),
       );
       setUsedAmbushIds((prev) => [...prev, nextCard.id]);
+    }
+
+    if (nextCard.type === "hero") {
+      setPreviousUndrawnHeroes((prev) =>
+        prev.filter((card) => card.id !== nextCard.id),
+      );
+      setUsedHeroIds((prev) => [...prev, nextCard.id]);
     }
 
     if (nextCard.specialEffect) {

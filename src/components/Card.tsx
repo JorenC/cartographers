@@ -7,14 +7,20 @@ interface CardProps {
 
 function Card({ card, large = false }: CardProps) {
   const isAmbush = card.type === "ambush";
+  const isHero = card.type === "hero"; // ✅ Add this
+
   const height = large ? "h-[80vh]" : "h-[333px]";
   const width = large ? "w-auto max-w-[90vw]" : "w-[200px]";
 
+  const borderClass = isAmbush
+    ? "border-red-600 shadow-[0_0_20px_red]"
+    : isHero
+      ? "border-gray-500 shadow-[0_0_20px_gray]" // ✅ Grey styling for hero
+      : "border-black-300";
+
   return (
     <div
-      className={`relative ${width} ${height} overflow-hidden transition-transform duration-300 hover:scale-110 rounded-lg  border-2 ${
-        isAmbush ? "border-red-600 shadow-[0_0_20px_red]" : "border-black-300"
-      }`}
+      className={`relative ${width} ${height} overflow-hidden transition-transform duration-300 hover:scale-110 rounded-lg border-2 ${borderClass}`}
     >
       <img
         src={`/cards/${card.id}.png`}
