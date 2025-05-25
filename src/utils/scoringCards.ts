@@ -177,7 +177,7 @@ export const heroDeckC: ScoringCard[] = [
     id: "HC2",
     name: "Ulem's Wallow",
     description:
-      "Earn two reputation for each water adjacent to two or more farms.",
+      "Earn four reputation for each water adjacent to two or more farms.",
   },
   {
     id: "HC3",

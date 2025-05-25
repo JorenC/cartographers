@@ -287,7 +287,7 @@ export const availableExpansions: Expansion[] = [
         },
         {
           id: "ambushm2",
-          name: "Orge Charge",
+          name: "Ogre Charge",
           description: "Ogre Charge Ambush Card",
         },
         {
