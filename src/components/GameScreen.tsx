@@ -11,7 +11,6 @@ import {
 } from "../utils/specialEffects";
 
 const seasons = ["Spring", "Summer", "Autumn", "Winter"];
-const seasonPointLimits = baseSet === "heroes" ? [8, 7, 7, 6] : [8, 8, 7, 6];
 
 const seasonBackgrounds: Record<string, string> = {
   Spring: "/backgroundspring.png",
@@ -33,19 +32,16 @@ function GameScreen({
   baseSet,
   onReturnToHome,
 }: GameScreenProps) {
+  const seasonPointLimits = baseSet === "heroes" ? [8, 7, 7, 6] : [8, 8, 7, 6];
+
   const [seasonIndex, setSeasonIndex] = useState(0);
   const [usedPoints, setUsedPoints] = useState(0);
   const [drawnCards, setDrawnCards] = useState<CardData[]>([]);
   const [deck, setDeck] = useState<CardData[]>([]);
   const [usedAmbushIds, setUsedAmbushIds] = useState<string[]>([]);
-  const [previousUndrawnAmbushes, setPreviousUndrawnAmbushes] = useState<
-    CardData[]
-  >([]);
+  const [previousUndrawnAmbushes, setPreviousUndrawnAmbushes] = useState<CardData[]>([]);
   const [usedHeroIds, setUsedHeroIds] = useState<string[]>([]);
-  const [previousUndrawnHeroes, setPreviousUndrawnHeroes] = useState<
-    CardData[]
-  >([]);
-
+  const [previousUndrawnHeroes, setPreviousUndrawnHeroes] = useState<CardData[]>([]);
   const [activeEffectCards, setActiveEffectCards] = useState<CardData[]>([]);
   const [showRecap, setShowRecap] = useState(false);
 
@@ -74,8 +70,6 @@ function GameScreen({
     setDeck(newDeck);
     setPreviousUndrawnAmbushes(newPreviousUndrawnAmbushes);
     setPreviousUndrawnHeroes(newPreviousUndrawnHeroes);
-
-    console.log(newDeck);
 
     if (newUsedAmbushId) {
       setUsedAmbushIds((prev) => [...prev, newUsedAmbushId]);
@@ -125,7 +119,6 @@ function GameScreen({
       setActiveEffectCards((prev) => [...prev, nextCard]);
     }
 
-    // Handle special effects (e.g., Fungoid Outbreak)
     const effectId = specialCardEffects[nextCard.id];
     if (effectId) {
       const effectHandler = specialEffectHandlers[effectId];
@@ -157,7 +150,7 @@ function GameScreen({
   };
 
   const handleNextSeason = () => {
-    setShowRecap(true); // show recap modal at end of each season
+    setShowRecap(true);
   };
 
   const handleEndSeasonRecap = () => {
@@ -166,7 +159,7 @@ function GameScreen({
       startNewSeason();
       setShowRecap(false);
     } else {
-      onReturnToHome(); // go back to home screen after winter
+      onReturnToHome();
     }
   };
 
@@ -189,14 +182,13 @@ function GameScreen({
           activeScoring={activeScoring}
           activeEffectCards={activeEffectCards}
           isFinalSeason={seasonIndex === 3}
-          season={season} // ✅ Pass season
+          season={season}
           onContinue={handleEndSeasonRecap}
         />
       )}
 
       {!showRecap && (
         <div className="relative w-full min-h-screen overflow-visible">
-          {/* Spring background image */}
           {seasonBackgrounds[season] && (
             <div
               className="absolute inset-0 bg-cover bg-center opacity-20 z-0 pointer-events-none"
@@ -204,7 +196,6 @@ function GameScreen({
             />
           )}
 
-          {/* Foreground app content */}
           <div className="relative z-10 flex flex-col items-stretch p-8 min-h-screen overflow-visible">
             <SeasonDisplay
               season={season}
