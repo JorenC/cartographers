@@ -11,7 +11,7 @@ import {
 } from "../utils/specialEffects";
 
 const seasons = ["Spring", "Summer", "Autumn", "Winter"];
-const seasonPointLimits = [8, 8, 7, 6];
+const seasonPointLimits = baseSet === "heroes" ? [8, 7, 7, 6] : [8, 8, 7, 6];
 
 const seasonBackgrounds: Record<string, string> = {
   Spring: "/backgroundspring.png",
